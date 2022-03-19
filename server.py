@@ -2,10 +2,10 @@ import socket, json
 import subprocess
 import os
 import base64
-# os.system("python -m pip install --upgrade pip")
-# os.system("pip3 install mss")
-# os.system("pip3 install numpy")
-# os.system("pip install opencv-python")
+os.system("python -m pip install --upgrade pip")
+os.system("pip3 install mss")
+os.system("pip3 install numpy")
+os.system("pip3 install opencv-python")
 import mss
 import cv2
 
