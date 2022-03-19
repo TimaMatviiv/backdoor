@@ -19,6 +19,7 @@ class Listener:
 
 	def reliable_recive(self):
 		json_data = ""
+		# print(self.connection.recv(1024))
 		while True:
 			try:
 				json_data += self.connection.recv(1024).decode("utf-8")
@@ -47,6 +48,7 @@ class Listener:
 	def run(self):
 		while True:
 			command = input(termcolor.colored("user $ ", "cyan"))
+			# command = input("user $ ")
 			
 			try:
 				if command.split()[0] == 'upload':
@@ -66,9 +68,10 @@ class Listener:
 						print(result)
 					else:
 						print("[~] Check your command")
-			except:
-				print("[-] Something was wrong!")
+			except Exception as error:
+				print(error)
+				# print("[-] Something was wrong!")
 
 
-my_listener = Listener("192.168.0.101", 4444)
+my_listener = Listener("localhost", 4444)
 my_listener.run()

