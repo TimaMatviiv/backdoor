@@ -1,5 +1,14 @@
+import subprocess as sb
+import os
 
 
-# import vlc
-# p = vlc.MediaPlayer("one.mp3")
-# p.play()
+
+out = sb.check_output("dir", shell=True).decode("cp866")
+
+print(out)
+# for i in out:
+# 	if i == "?":
+# 		i = "і"
+# print(out)
+
+# os.system("dir")
