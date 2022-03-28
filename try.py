@@ -1,20 +1,20 @@
 import subprocess as sb
 import os
 
+os.path.basename(__file__)
 
 
+# def UkDecode(text):
+# 	text = text.decode("cp866")
+# 	for i in range(len(text) - 1):
+# 		if text[i] == "?":
+# 			text = text[:i] + "і" + text[i+1:]
+# 	return text
 
-def UkDecode(text):
-	text = text.decode("cp866")
-	for i in range(len(text) - 1):
-		if text[i] == "?":
-			text = text[:i] + "і" + text[i+1:]
-	return text
 
+# out = sb.check_output("dir", shell=True)
 
-out = sb.check_output("dir", shell=True)
-
-print(UkDecode(out))
+# print(UkDecode(out))
 
 
 

