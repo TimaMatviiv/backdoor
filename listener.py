@@ -23,7 +23,6 @@ class ListenerOld:
 
 	def reliable_recive(self):
 		json_data = ""
-		# print(self.connection.recv(1024))
 		while True:
 			try:
 				json_data += self.connection.recv(1024).decode("utf-8")
