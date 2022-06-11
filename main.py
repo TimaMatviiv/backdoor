@@ -88,7 +88,7 @@ class Listener:
 					for con in self.get_connections():
 						print(con[1])
 				else:
-					print(colored("[-] You didn't have any connection yet", "red"))
+					print(colored("[-] You don't have any connection yet", "red"))
 
 			elif command == "choose":
 				connections = self.get_connections()
@@ -106,7 +106,7 @@ class Listener:
 					else:
 						print(colored("[-] This connection does not exist!"))
 				else:
-					print(colored("[-] You didn't have any connection yet", "red"))
+					print(colored("[-] You don't have any connection yet", "red"))
 
 			elif command == "chosen":
 				if self.chosen_connection: 
