@@ -59,7 +59,6 @@ class Listener:
 		self.reliable_send(command)
 		if command.split()[0] == "exit":
 			self.chosen_connection[0].close()
-			exit()
 		return self.reliable_recive()
 
 
@@ -125,13 +124,12 @@ class Listener:
 
 
 if __name__ == "__main__":
-	listener = Listener("192.168.0.108", 4444)
+	listener = Listener("192.168.0.199", 4444)
 
 	listen_thread = threading.Thread(target=listener.listen)
 	listen_thread.start()
 
 	listener.run()
-	print("alright")
-	listen_thread.join()
+
 
 

