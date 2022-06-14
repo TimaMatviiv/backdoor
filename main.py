@@ -141,6 +141,7 @@ class Listener:
 			
 			elif command == "exit":
 				self.close()
+				exit()
 				close_thread = threading.Thread(target=self.execute_remotely, args=("exit",))
 				close_thread.start()
 				break
