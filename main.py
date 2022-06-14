@@ -88,6 +88,7 @@ class Listener:
 
 	def close(self):
 		self.do_listen = False
+		self.listener.accept()
 		self.listener.close()
 
 
