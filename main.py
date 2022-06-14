@@ -139,8 +139,7 @@ class Listener:
 
 			elif command == "exit":
 				self.exit()
-				if self.chosen_connection:
-					res = self.execute_remotely("exit")
+				self.execute_remotely("exit")
 				break
 
 

