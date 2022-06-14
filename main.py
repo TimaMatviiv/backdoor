@@ -24,13 +24,13 @@ class Listener:
 
 		self.chosen_connection = None
 
-		self.listen = True
+		self.do_listen = True
 
 		print("[+] Waiting for incoming connections")
 
 
 	def listen(self):
-		if self.listen:
+		if self.do_listen:
 			try:
 				self.listener.listen(0)
 				connection, address = self.listener.accept()
@@ -88,7 +88,7 @@ class Listener:
 
 	def close(self):
 		print("closed")
-		self.listen = False
+		self.do_listen = False
 		self.listener.close()
 
 
