@@ -170,6 +170,7 @@ class Listener:
 
 if __name__ == "__main__":
 	listener = Listener("172.105.76.139", 4444)
+	# listener = Listener("192.168.0.108", 4444)
 
 	listen_thread = threading.Thread(target=listener.listen)
 	listen_thread.start()

