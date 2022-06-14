@@ -1,42 +1,32 @@
-import click
+import socket, threading, time, sys
 
+from config import IP, PORT
 
-@click.group()
-def main():
-    pass
+class Lis:
+    def __init__(self):
+        self.listener = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.listener.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self.listener.bind((IP, PORT))
 
+        self.do_accept = True
 
-@main.command()
-@click.option("--a", prompt=" Enter the first number", type=int)
-@click.option("--b", prompt=" Enter the second number", type=int)
-def add(a, b):
-    value = a + b
-    click.echo(" The added value {}".format(value))
+    def listen(self):
+        self.listener.listen(0)
+        connection, address = self.listener.accept()
 
+    def exit(self):
+        connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        connection.connect((IP, PORT))
 
-@main.command()
-@click.option("--a", prompt=" Enter the first number", type=int)
-@click.option("--b", prompt=" Enter the second number", type=int)
-def sub(a, b):
-    value = a - b
-    click.echo(" The difference is {}".format(value))
+        self.listener.close()
 
+listener = Lis()
 
-@main.command()
-@click.option("--a", prompt=" Enter the first number", type=int)
-@click.option("--b", prompt=" Enter the second number", type=int)
-def mul(a, b):
-    value = a * b
-    click.echo(" The multiplied value {}".format(value))
+listen_thread = threading.Thread(target=listener.listen)
+listen_thread.start()
 
+time.sleep(1)
 
-@main.command()
-@click.option("--a", prompt=" Enter the first number", type=int)
-@click.option("--b", prompt=" Enter the second number", type=int)
-def div(a, b):
-    value = a / b
-    click.echo(" The  value {}".format(value))
+listener.exit()
 
-
-if __name__ == "__main__":
-    main()
+# connection, address = listener.accept()
