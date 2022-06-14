@@ -94,7 +94,7 @@ class Listener:
 
 	def run(self):
 		while True:
-			if self.chosen_connection: 
+			if self.chosen_connection:
 				user = self.chosen_connection[1][0]
 				command = input(f"{user} # ")
 			else: command = input(">>> ")
@@ -113,7 +113,7 @@ class Listener:
 					for con in range(len(connections)):
 						connection = connections[con][1]
 						print(f"{str(con+1)}. {connection}")
-					chosen = input("Enter number of connection: ") 
+					chosen = input("Enter number of connection: ")
 					if not chosen.isdigit():
 						print(colored("[~] You must to enter number!", "yellow"))
 					elif int(chosen) <= len(connections):
@@ -126,9 +126,9 @@ class Listener:
 					print(colored("[-] You don't have any connection yet", "red"))
 
 			elif command == "chosen":
-				if self.chosen_connection: 
+				if self.chosen_connection:
 					print("[+] Chosen connection:", self.chosen_connection[1])
-				else: 
+				else:
 					print(colored("[-] You didn't choose any connection yet", "red"))
 
 			elif command == "help":
@@ -138,7 +138,7 @@ class Listener:
 				help_message += colored(" exit", "red") + " - stop the program; \n"
 				print(help_message)
 
-			
+
 			elif command == "exit":
 				self.close()
 				close_thread = threading.Thread(target=self.execute_remotely, args=("exit",))
@@ -155,12 +155,12 @@ class Listener:
 					else:
 						self.write_file("one.jpg", res)
 				else: print(colored("[~] You have to choose one device", "yellow"))
-			
+
 			elif command.strip() and command.split()[0] == "download":
 				if self.chosen_connection:
 					file = command.replace("download", "").strip()
 					res = self.execute_remotely(command)
-					if res.split()[0] == "[-]": 
+					if res.split()[0] == "[-]":
 						print(colored(res, "red"))
 					else:
 						self.write_file(file, res)
@@ -183,6 +183,3 @@ if __name__ == "__main__":
 	listen_thread.start()
 
 	listener.run()
-
-
-
