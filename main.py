@@ -87,9 +87,9 @@ class Listener:
 
 
 	def close(self):
-		print("closed")
 		self.do_listen = False
 		self.listener.close()
+		print("closed")
 
 
 	def run(self):
