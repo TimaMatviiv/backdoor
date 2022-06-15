@@ -86,7 +86,6 @@ class Listener:
 	def exit(self):
 		connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		connection.connect((IP, PORT))
-
 		self.listener.close()
 
 
