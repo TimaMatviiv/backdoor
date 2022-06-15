@@ -170,6 +170,7 @@ class Listener:
 					if os.path.exists(file_name):
 						file = self.read_file(file_name)
 						res = self.execute_remotely(f"upload {file_name}, {file}")
+						print(colored(res, "green"))
 					else:
 						print(colored("[-] This file is not exists", "red"))
 				else: print(colored("[-] You didn't choose any connection yet", "red"))
