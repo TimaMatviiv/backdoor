@@ -1,6 +1,6 @@
 import socket, json, subprocess, os, cv2, pyautogui
 import base64, threading, time, webbrowser
-import pythoncom, pyHook 
+import keyboard
 
 def uMad(event):
     return False

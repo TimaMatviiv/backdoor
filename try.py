@@ -1,24 +1,32 @@
 import pyautogui
 import keyboard
+import time
 
-stopKey = "s" #The stopKey is the button to press to stop. you can also do a shortcut like ctrl+s
-maxX, maxY = pyautogui.size() #get max size of screen
-while True:
-	if keyboard.is_pressed(stopKey):
-		break
-	else:
-		pyautogui.moveTo(maxX/2, maxY/2) #move the mouse to the center of the screen
-
-
-pyautogui.FAILSAFE = False
-
-pyautogui.press(stopKey)
+# stopKey = "s" #The stopKey is the button to press to stop. you can also do a shortcut like ctrl+s
+# maxX, maxY = pyautogui.size() #get max size of screen
+# while True:
+# 	if keyboard.is_pressed(stopKey):
+# 		break
+# 	else:
+# 		pyautogui.moveTo(maxX/2, maxY/2) #move the mouse to the center of the screen
 
 
+# pyautogui.FAILSAFE = False
 
+# pyautogui.press(stopKey)
 
 
 
+print("blocking")
+for i in range(150):
+	keyboard.block_key(i)
+
+
+time.sleep(3)
+
+print("unblocking")
+for i in range(150):
+	keyboard.unblock_key(i)
 
 
 
