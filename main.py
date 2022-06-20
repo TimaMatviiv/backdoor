@@ -251,14 +251,22 @@ class Listener:
 					except: print(colored("[-] Wrong arugument", "red"))
 				else: print(colored("[-] You didn't choose any connection yet", "red"))
 
-
-			elif len(command.split()):
+			elif command.strip() and command.split()[0] == "async" and command.replace("async", "").strip():
 				if self.chosen_connection:
 					res = self.execute_remotely(command)
 					if res.split()[0] == "[-]":
 						print(colored(res, "red"))
 					else:
 						print(colored(res, "green"))
+				else: print(colored("[-] You didn't choose any connection yet", "red"))
+
+			elif len(command.split()):
+				if self.chosen_connection:
+					res = self.execute_remotely(command)
+					if res.strip() and res.split()[0] == "[-]":
+						print(colored(res, "red"))
+					else:
+						print(res)
 
 				else: print(colored("[-] You didn't choose any connection yet", "red"))
 
