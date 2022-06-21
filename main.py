@@ -100,8 +100,8 @@ class Listener:
 	def run(self):
 		while True:
 			if self.chosen_connection:
-				user = self.chosen_connection[1][0]
-				# user = "(" + self.chosen_connection[1][0] + ") " + self.execute_remotely("get username")
+				# user = self.chosen_connection[1][0]
+				user = "(" + self.chosen_connection[1][0] + ") " + self.execute_remotely("get username")
 				command = input(f"{user} # ")
 			else: command = input(">>> ")
 
