@@ -159,9 +159,12 @@ class Listener:
 				help_message += colored(" keyboard true", "green") + " - unblock keyboard;\n"
 				help_message += colored(" mouse false", "green") + " - block mouse;\n"
 				help_message += colored(" mouse true", "green") + " - unblock mouse;\n"
-				help_message += colored(" play music", "green") + " - play music;\n"
+				help_message += colored(" play music <link>", "green") + " - play music;\n"
+				help_message += colored(" stop music", "green") + " - stop music;\n"
 				help_message += colored(" volume <negative number>", "green") + " - set volume;\n"
 				help_message += colored(" async <command>", "green") + " - use it for async command execution;\n"
+				help_message += colored(" open window", "green") + " - open stop war window;\n"
+				help_message += colored(" close window", "green") + " - close the window;\n"
 				help_message += colored(" exit", "red") + " - stop the program;\n"
 				print(help_message)
 
