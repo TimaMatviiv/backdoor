@@ -1,6 +1,6 @@
 import socket, json, subprocess, os, cv2, pyautogui
 import base64, threading, time, webbrowser
-import keyboard, sys
+import keyboard, sys, requests
 import multiprocessing
 
 from playsound import playsound
@@ -28,7 +28,12 @@ class Window(QMainWindow):
 
 		self.label = QLabel(self)
 
-		pixmap = QPixmap("1.jpg")
+		url = "https://i.ibb.co/3pQSLK8/1.jpg"
+
+		image = QImage()
+		image.loadFromData(requests.get(url).content)
+		
+		pixmap = QPixmap(image)
 		self.label.setPixmap(pixmap)
 		self.setCentralWidget(self.label)
 		

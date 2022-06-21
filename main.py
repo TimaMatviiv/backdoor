@@ -171,7 +171,6 @@ class Listener:
 			elif command == "exit":
 				self.exit()
 				self.reliable_send("exit")
-				print("aldflakj")
 				exit()
 				break
 
